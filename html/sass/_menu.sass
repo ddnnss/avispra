@@ -1,0 +1,37 @@
+.header
+  display: grid
+  grid-template-columns: 1fr 1fr 1fr
+  align-items: center
+  background: #000
+  height: 110px
+
+.logo
+  text-align: center
+  p
+    font-family: Appetite,sans-serif
+    font-size: 30px
+    color: #fff
+  span
+    color: #ababab
+
+.top-menu
+  ul
+    list-style: none
+    display: inline-flex
+    li
+      a
+        text-decoration: none
+        padding: 10px 15px
+        color: #fff
+        text-transform: uppercase
+        &:hover
+          cursor: pointer
+          background: $pink-color
+
+.top-menu-buttons
+  display: flex
+  justify-content: flex-end
+  align-items: center
+
+  a
+    margin-right: 15px

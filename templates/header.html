@@ -1,0 +1,32 @@
+{% load static %}
+<header>
+    <div class="header">
+        <nav class="top-menu">
+            <ul>
+                <li><a href="{% url 'about' %}">о нас</a></li>
+                <li><a href="{% url 'services' %}">услуги</a></li>
+                <li><a href="{% url 'portfolio' %}">портфолио</a></li>
+                <li><a href="{% url 'contacts' %}">контакты</a></li>
+            </ul>
+        </nav>
+
+        <div class="logo">
+            <p>Avispa</p>
+            <span>Швейное производство в Санкт-Петербурге</span>
+        </div>
+        <div class="top-menu-buttons">
+            <a id="mobile-toggle" href="#"><span>&#9776;</span></a>
+            <a href="#" onclick="openModal();return false;" class="btn">сделать заказ</a>
+            <a href="#"><img src="{% static 'img/top-phone.png' %}" alt=""></a>
+
+        </div>
+    </div>
+    <div id="mobile-menu">
+        <ul>
+            <li><a href="{% url 'about' %}">о нас</a></li>
+            <li><a href="{% url 'services' %}">услуги</a></li>
+            <li><a href="{% url 'portfolio' %}">портфолио</a></li>
+            <li><a href="{% url 'contacts' %}">контакты</a></li>
+        </ul>
+    </div>
+</header>

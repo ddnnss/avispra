@@ -1,0 +1,29 @@
+{% extends 'basic.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="service-main">
+    <div class="container">
+        <div class="breadcrumbs mb30">
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li>Услуги</li>
+            </ul>
+        </div>
+        <div class="services">
+            <h1 >{{ header_section1 }}</h1>
+            {{ services_text1_section1 |safe }}
+            {% for service in all_services %}
+            <h3>{{ service.header }}</h3>
+            {{ service.text | safe }}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% include 'order_form.html' %}
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

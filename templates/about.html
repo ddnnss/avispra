@@ -1,0 +1,75 @@
+{% extends 'basic.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="slider">
+        <div class="my-slider">
+            {% for slide in slider %}
+            <div><img src="{{ slide.image.url }}" alt=""></div>
+           {% endfor %}
+
+        </div>
+    </section>
+    <section class="about-main">
+        <div class="container">
+            <div class="breadcrumbs mb30">
+                <ul>
+                    <li><a href="/">Главная</a></li>
+                    <li>О нас</li>
+                </ul>
+            </div>
+            <h1 class="mb30">{{ header_section1 }}</h1>
+            <div class="about-info">
+                <div>{{ text1_section1 | safe }}</div>
+                <div>{{ text2_section1 | safe }}</div>
+
+
+            </div>
+        </div>
+    </section>
+    <section class="our-clients">
+        <div class="container">
+            <h3 class="mb30">{{ header_section2 }}</h3>
+            {{ text1_section2 |safe }}
+            <div class="clients">
+                {% for client in clients %}
+                <div class="client">
+                    <img src="{{ client.image_small.url }}" alt="">
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </section>
+    <section class="manufacture">
+        <div class="container">
+            <h3 class="mb50">{{ header_section3 }}</h3>
+            <div class="manufacture-items">
+                {% for work in works %}
+                <div>
+                    <img src="{{ work.image_small.url }}" alt="">
+                </div>
+                {% endfor %}
+
+
+
+            </div>
+        </div>
+    </section>
+    {% include 'order_form.html' %}
+{% endblock %}
+
+{% block js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/min/tiny-slider.js"></script>
+    <script>
+        var slider = tns({
+            container: '.my-slider',
+            items: 1,
+            controls: false,
+            navPosition: 'bottom',
+
+
+        });
+    </script>
+{% endblock %}

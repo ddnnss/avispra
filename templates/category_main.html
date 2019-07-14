@@ -1,0 +1,35 @@
+{% extends 'basic.html' %}
+{% load static %}
+
+{% block content %}
+<section class="portfolio-main">
+    <div class="container">
+        <div class="breadcrumbs mb30">
+            <ul>
+                <li><a href="#">Главная</a></li>
+                <li>Портфолию</li>
+
+            </ul>
+        </div>
+        <h1 class="mb30">Портфолию</h1>
+        <div class="portfolio-items">
+            {% for category in categories %}
+            <div class="portfolio-main-item">
+            <a href="{% url 'portfolio_cat' category.name_slug %}">  <img src="{{ category.image_small.url }}" alt=""></a>
+                <h5><a href="{% url 'portfolio_cat' category.name_slug %}">  {{ category.name }}</a></h5>
+            </div>
+           {% endfor %}
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

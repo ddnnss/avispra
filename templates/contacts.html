@@ -1,0 +1,32 @@
+{% extends 'basic.html' %}
+{% load static %}
+
+{% block content %}
+ <section class="map">
+
+</section>
+<section class="contact-main">
+    <div class="container">
+        <div class="breadcrumbs mb30">
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li>Контакты</li>
+            </ul>
+        </div>
+
+        <h1 class="mb30">{{ contact_header_section1 }}</h1>
+        <div class="mb50">
+           {{ contact_text1_section1 |safe }}
+        </div>
+
+        <h3 class="mb30">{{ contact_header_section2 }}</h3>
+        {{ contact_text1_section2 |safe }}
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'basic.html' %}
+{% load static %}
+
+{% block content %}
+   <section class="portfolio-main">
+    <div class="container">
+        <div class="breadcrumbs mb30">
+            <ul>
+                <li><a href="#">Главная</a></li>
+                <li><a href="{% url 'portfolio' %}">Портфолию</a></li>
+                <li><a href="{% url 'portfolio_cat' category.name_slug %}">{{ category.name }}</a></li>
+                <li>{{ item.name }}</li>
+            </ul>
+        </div>
+     <div class="portfolio-item-info">
+         <div class="portfolio-item-preview">
+             {% for image in images %}
+                 {% if forloop.counter == 1 %}
+                    <img class="selected" src="{{ image.image_small.url }}" data-full_image = "{{ image.image.url }}"  onclick="imageClick(this)" alt="">
+                 {% else %}
+                     <img  src="{{ image.image_small.url }}" data-full_image = "{{ image.image.url }}" onclick="imageClick(this)" alt="">
+                 {% endif %}
+             {% endfor %}
+
+         </div>
+          <div class="portfolio-item-image">
+              <img id="full_image" src="{{ images.first.image.url }}" alt="">
+         </div>
+           <div class="portfolio-item-description">
+               <h1 class="mb20">{{ item.name }}</h1>
+               <div class="item-description mb20">
+                   {{ item.item_description | safe }}
+
+               </div>
+                 {% if item.min_price > 0 %}
+                           <h4 class="mb20">Стоимость пошива: от {{ item.min_price }} р. до {{ item.max_price }} р.</h4>
+                        {% else %}
+                           <h4 class="mb20">Стоимость пошива: {{ item.max_price }} р.</h4>
+                        {% endif %}
+
+                 <ul class="mb40">
+                   <li>Стоимость зависит от тиража</li>
+                   <li>Материалы считаются отдельно</li>
+                   <li>Минимальный заказ от {{ item.min_order }} шт.</li>
+               </ul>
+               <h4 class="mb20">Как сделать заказ</h4>
+               <p class="mb30">
+                   У вас остались вопросы?<br>
+                    Вы хотите оформить заказ услуг пошива в СПБ?<br>
+                    Заполните форму ниже или позвоните нам по телефону
+               </p>
+               <h2  class="mb20">8(812) 340-40-30</h2>
+                <a href="#" class="btn">сделать заказ</a>
+         </div>
+
+     </div>
+
+
+
+    </div>
+
+</section>
+
+    <script>
+
+    function imageClick(i) {
+        console.log(i.dataset.full_image)
+        let fullimage= document.getElementById('full_image')
+
+        fullimage.setAttribute('src',i.dataset.full_image)
+
+    }
+    </script>
+{% include 'order_form.html' %}
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

@@ -1,0 +1,183 @@
+@font-face
+	font-family: 'Appetite'
+	src: url('../font/appetite.eot')
+	src: url('../font/appetite.eot?#iefix') format('embedded-opentype')
+    src: url('../font/appetite.woff2') format('woff2')
+    src: url('../font/appetite.woff') format('woff')
+    src: url('../font/appetite.ttf') format('truetype')
+    src: url('../font/appetite.svg#appetite') format('svg')
+
+
+
+$pink-color: #f66059
+
+
+body
+  font-family: 'Arimo', sans-serif
+  font-weight: normal
+  font-style: normal
+
+h1
+  font-family: 'Arimo', sans-serif
+  font-weight: bold
+  font-style: normal
+  font-size: 36px
+  text-transform: uppercase
+h2
+  font-family: 'Arimo', sans-serif
+  font-weight: bold
+  font-style: normal
+  font-size: 30px
+  text-transform: uppercase
+
+h3
+  font-family: 'Arimo', sans-serif
+  font-weight: bold
+  font-style: normal
+  font-size: 24px
+  text-transform: uppercase
+h4
+  font-family: 'Arimo', sans-serif
+  font-weight: bold
+  font-style: normal
+  font-size: 18px
+  text-transform: uppercase
+
+
+.custom-input
+    font-family: 'Arimo', sans-serif
+    font-weight: normal
+    font-style: normal
+    box-sizing: border-box
+    letter-spacing: 1px
+    border: 0
+    padding: 7px 0
+    border-bottom: 2px solid #c2c2c2
+    background-color: #fff
+    width: 100%
+    &:focus
+      outline: none
+    &::placeholder
+      font-family: 'Arimo', sans-serif
+      font-weight: normal
+      font-style: normal
+      text-align: center
+      color: #000000
+      font-size: 24px
+
+.send_success
+  display: none
+  border: 2px dashed #24de69
+  padding: 20px
+  font-size: 19px
+  font-weight: 600
+  color: #24de69
+
+.modal-send_success
+  display: none
+  border: 2px dashed #24de69
+  padding: 20px
+  font-size: 19px
+  font-weight: 600
+  color: #24de69
+
+.form-error
+  font-size: 9px
+  color: red
+  text-transform: uppercase
+
+.error-field
+  border-bottom: 2px solid red !important
+
+.inputfile
+	width: 0.1px
+	height: 0.1px
+	opacity: 0
+	overflow: hidden
+	position: absolute
+	z-index: -1
+.inputfile + label
+  cursor: pointer
+  border: 2px dashed #bdbdbd
+  display: block
+  padding: 30px 0
+
+
+.mb20
+  margin-bottom: 20px
+.mb30
+  margin-bottom: 30px
+.mb40
+  margin-bottom: 40px
+.mb50
+  margin-bottom: 50px
+
+.is-visible
+  display: block !important
+
+.container
+  max-width: 1160px
+  margin: 0 auto
+  padding: 0 15px
+
+.color-pink
+  color: $pink-color !important
+
+.breadcrumbs
+  ul
+    display: inline-flex
+    li
+      font-size: 18px
+      color: #747474
+      a
+        text-decoration: none
+        color: #747474
+
+      &:after
+        content: '/'
+        margin: 0 10px
+      &:last-child:after
+        content: ''
+#mobile-menu
+  display: none
+  background: #000
+  color: #fff
+  padding: 20px
+#mobile-toggle
+  text-decoration: none
+  color: #ffffff
+  font-size: 30px
+  display: none
+.btn
+  text-decoration: none
+  text-transform: uppercase
+  background: $pink-color
+  border-radius: 23px
+  color: #fff
+  padding: 15px 20px
+  font-size: 14px
+  &:hover
+    opacity: .8
+
+.btn-submit
+  text-transform: uppercase
+  background: $pink-color
+  border-radius: 35px
+  color: #fff
+  padding: 25px 30px
+  font-size: 14px
+  border: none
+  cursor: pointer
+  &:hover
+    opacity: .8
+
+.service-main
+  padding: 100px 0
+  background: #ededed
+
+.services
+  h1
+    margin-bottom: 30px
+
+  h3
+    margin: 50px 0 30px 0
