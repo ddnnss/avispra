@@ -1,6 +1,7 @@
 from pytils.translit import slugify
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.utils.safestring import mark_safe
 
 
 
@@ -142,6 +143,10 @@ class Item(models.Model):
         self.name_slug = slugify(self.name)
         super(Item, self).save(*args, **kwargs)
 
+
+
+
+
     def __str__(self):
         if self.category.name:
             return 'Товар {} в категория {}'.format(self.name, self.category.name)
@@ -160,9 +165,18 @@ class ItemImage(models.Model):
 
     def __str__(self):
         if self.item:
-            return 'Изображение не связано с товаром : {}'.format(self.item.name)
+            return 'Изображение связано с товаром : {}'.format(self.item.name)
         else:
             return 'Изображение не связано с товаром '
+
+    def image_tag(self):
+        # used in the admin site model as a "thumbnail"
+        if self.image:
+            return mark_safe('<img src="{}" width="150" height="150" />'.format(self.image.url))
+        else:
+            return mark_safe('<span>НЕТ МИНИАТЮРЫ</span>')
+
+    image_tag.short_description = 'Картинка'
 
     class Meta:
         verbose_name = "Изображение для товара"
