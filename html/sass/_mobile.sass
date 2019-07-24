@@ -1,6 +1,8 @@
 @media screen and  (max-width: 1270px)
   .header
     grid-template-columns: 2fr 1fr 1fr
+  .btn
+    padding: 15px 10px
 
 @media screen and  (max-width: 840px)
   .top-menu
@@ -8,6 +10,8 @@
       li
         a
           font-size: 14px
+  .btn
+    padding: 15px 5px
 
 @media screen and  (max-width: 768px)
   .header
@@ -17,7 +21,14 @@
   .top-menu
     display: none
 
-@media screen and  (max-width: 425px)
+@media screen and  (max-width: 530px)
+
+  .footer
+    p
+      margin-bottom: 10px
+  #footer_text
+    display: none
+
   #mobile-menu
     width: 385px
   .slider
@@ -56,13 +67,20 @@
         font-size: 12px
 
 @media screen and  (max-width: 375px)
+  .btn
+    padding: 15px 5px
+    font-size: 12px
+
   #mobile-menu
     width: 335px
 
 @media screen and  (max-width: 320px)
+  .btn
+    padding: 15px 5px
+    font-size: 12px
   #mobile-menu
     width: 280px
   .top-menu-buttons
-    align-items: baseline
+    align-items: end
   #mobile-toggle
     font-size: 25px
