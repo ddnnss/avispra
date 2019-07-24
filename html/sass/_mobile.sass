@@ -1,3 +1,14 @@
+@media screen and  (max-width: 1270px)
+  .header
+    grid-template-columns: 2fr 1fr 1fr
+
+@media screen and  (max-width: 840px)
+  .top-menu
+    ul
+      li
+        a
+          font-size: 14px
+
 @media screen and  (max-width: 768px)
   .header
     grid-template-columns: 1fr 1fr
@@ -5,3 +16,53 @@
     display: block
   .top-menu
     display: none
+
+@media screen and  (max-width: 425px)
+  #mobile-menu
+    width: 385px
+  .slider
+    display: none
+  .header
+    grid-template-columns: 1fr 2fr
+  .logo
+    span
+      display: none
+  .footer
+    grid-template-columns: 1fr 1fr 1fr
+    text-align: center
+    p
+      font-size: 14px
+  .close
+    top: 0px
+    left: 90%
+  .modal
+    overflow: auto
+  .modal-content
+    height: auto
+  .portfolio-item-info
+    display: flex
+    flex-direction: column
+    align-items: center
+  .portfolio-item-image
+    order: 1
+  .portfolio-item-preview
+    order: 2
+  .portfolio-item-description
+    order: 3
+  .breadcrumbs
+    li
+      font-size: 12px !important
+      a
+        font-size: 12px
+
+@media screen and  (max-width: 375px)
+  #mobile-menu
+    width: 335px
+
+@media screen and  (max-width: 320px)
+  #mobile-menu
+    width: 280px
+  .top-menu-buttons
+    align-items: baseline
+  #mobile-toggle
+    font-size: 25px
