@@ -1,3 +1,4 @@
+@charset "UTF-8";
 body,
 div,
 dl,
@@ -337,6 +338,18 @@ h4 {
 
 .services h3 {
   margin: 50px 0 30px 0; }
+
+.admin-edit:hover {
+  border: 1px solid red;
+  padding: 10px;
+  cursor: pointer; }
+
+.admin-edit:hover:after {
+  content: 'Редактировать';
+  background: red;
+  color: white;
+  position: relative;
+  bottom: -29px; }
 
 #bg {
   position: fixed;

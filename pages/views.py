@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 from .models import *
 #from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from .forms import CreateForm
+import json
 
 def index(request):
     new_form = CreateForm()
@@ -113,3 +115,14 @@ def services(request):
     header_section1 = page_info.services_header_section1
     services_text1_section1 = page_info.services_text1_section1
     return render(request, 'services.html', locals())
+
+def getInfo(request):
+    return_dict = {}
+    print(request.POST)
+    data = request.POST.get('target')
+
+    if data == 'about_text1_section1':
+        page = Page.objects.get(id=1)
+        return_dict['text'] = page.about_text1_section1
+
+    return JsonResponse(return_dict)

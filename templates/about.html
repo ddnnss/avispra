@@ -20,7 +20,7 @@
             </div>
             <h1 class="mb30">{{ header_section1 }}</h1>
             <div class="about-info">
-                <div>{{ text1_section1 | safe }}</div>
+                <div class="admin-edit" onclick="editInfo(this,'about_text1_section1')">{{ text1_section1 | safe }}</div>
                 <div>{{ text2_section1 | safe }}</div>
 
 
@@ -34,7 +34,7 @@
             <div class="clients">
                 {% for client in clients %}
                 <div class="client">
-                    <img src="{{ client.image.url }}" alt="">
+                    <img class="admin-edit" src="{{ client.image.url }}" alt="">
                 </div>
                 {% endfor %}
 
@@ -58,6 +58,49 @@
         </div>
     </section>
     {% include 'order_form.html' %}
+     <div style="display: none" id="editModal" class="modal">
+
+        <div id="modal-content" class="modal-content">
+<a style="margin-bottom: 30px" href="#">сохранить</a>
+        </div>
+
+
+    </div>
+    <script src="https://cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>
+    <script>
+
+    function editInfo(el,target) {
+        let editmodal = document.getElementById('editModal');
+        let editor = document.getElementById('editor');
+        let modal_content = document.getElementById('modal-content')
+        let csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].defaultValue
+        console.log(csrfmiddlewaretoken)
+        editmodal.style.display = "block";
+        let textarea = document.createElement('textarea')
+        textarea.setAttribute("id", "editor");
+        textarea.innerText = el.innerHTML
+        modal_content.appendChild(textarea)
+        CKEDITOR.replace( 'editor' );
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+    </script>
+
+
+
+
 {% endblock %}
 
 {% block js %}
