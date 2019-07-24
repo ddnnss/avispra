@@ -452,6 +452,9 @@ h4 {
 
 .logo {
   text-align: center; }
+  .logo img {
+    display: block;
+    margin: 0 auto; }
   .logo p {
     font-family: Appetite,sans-serif;
     font-size: 30px;
@@ -622,11 +625,15 @@ footer {
 
 @media screen and (max-width: 1270px) {
   .header {
-    grid-template-columns: 2fr 1fr 1fr; } }
+    grid-template-columns: 2fr 1fr 1fr; }
+  .btn {
+    padding: 15px 10px; } }
 
 @media screen and (max-width: 840px) {
   .top-menu ul li a {
-    font-size: 14px; } }
+    font-size: 14px; }
+  .btn {
+    padding: 15px 5px; } }
 
 @media screen and (max-width: 768px) {
   .header {
@@ -636,7 +643,11 @@ footer {
   .top-menu {
     display: none; } }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 530px) {
+  .footer p {
+    margin-bottom: 10px; }
+  #footer_text {
+    display: none; }
   #mobile-menu {
     width: 385px; }
   .slider {
@@ -686,15 +697,21 @@ footer {
       font-size: 12px; } }
 
 @media screen and (max-width: 375px) {
+  .btn {
+    padding: 15px 5px;
+    font-size: 12px; }
   #mobile-menu {
     width: 335px; } }
 
 @media screen and (max-width: 320px) {
+  .btn {
+    padding: 15px 5px;
+    font-size: 12px; }
   #mobile-menu {
     width: 280px; }
   .top-menu-buttons {
-    -webkit-box-align: baseline;
-        -ms-flex-align: baseline;
-            align-items: baseline; }
+    -webkit-box-align: end;
+        -ms-flex-align: end;
+            align-items: end; }
   #mobile-toggle {
     font-size: 25px; } }
