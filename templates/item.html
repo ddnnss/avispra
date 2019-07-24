@@ -16,9 +16,9 @@
          <div class="portfolio-item-preview">
              {% for image in images %}
                  {% if forloop.counter == 1 %}
-                    <img class="selected" src="{{ image.image_small.url }}" data-full_image = "{{ image.image.url }}"  onclick="imageClick(this)" alt="">
+                    <img class="img-thumb selected" src="{{ image.image.url }}" data-full_image = "{{ image.image.url }}"  onclick="imageClick(this)" alt="">
                  {% else %}
-                     <img  src="{{ image.image_small.url }}" data-full_image = "{{ image.image.url }}" onclick="imageClick(this)" alt="">
+                     <img class="img-thumb"  src="{{ image.image.url }}" data-full_image = "{{ image.image.url }}" onclick="imageClick(this)" alt="">
                  {% endif %}
              {% endfor %}
 
@@ -62,13 +62,14 @@
 </section>
 
     <script>
-
     function imageClick(i) {
-        console.log(i.dataset.full_image)
         let fullimage= document.getElementById('full_image')
-
+        let all_img = document.getElementsByClassName('img-thumb')
+        for (var img of all_img) {
+            img.classList.remove("selected");
+        }
         fullimage.setAttribute('src',i.dataset.full_image)
-
+        i.classList.add("selected")
     }
     </script>
 {% include 'order_form.html' %}

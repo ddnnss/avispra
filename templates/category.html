@@ -15,7 +15,7 @@
             <div class="portfolio-items">
                 {% for item in items %}
                     <div class="portfolio-item">
-                        <a href="{% url 'portfolio_item' category.name_slug item.name_slug %}"><img src="{{ item.itemimage_set.first.image_small.url }}" alt=""></a>
+                        <a href="{% url 'portfolio_item' category.name_slug item.name_slug %}"><img src="{{ item.itemimage_set.first.image.url }}" alt=""></a>
 
                         <h5><a href="{% url 'portfolio_item' category.name_slug item.name_slug %}">{{ item.name }}</a></h5>
                         {% if item.min_price > 0 %}

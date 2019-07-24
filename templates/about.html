@@ -34,7 +34,7 @@
             <div class="clients">
                 {% for client in clients %}
                 <div class="client">
-                    <img src="{{ client.image_small.url }}" alt="">
+                    <img src="{{ client.image.url }}" alt="">
                 </div>
                 {% endfor %}
 
@@ -48,7 +48,7 @@
             <div class="manufacture-items">
                 {% for work in works %}
                 <div>
-                    <img src="{{ work.image_small.url }}" alt="">
+                    <img src="{{ work.image.url }}" alt="">
                 </div>
                 {% endfor %}
 

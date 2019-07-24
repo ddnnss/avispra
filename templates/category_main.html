@@ -15,7 +15,7 @@
         <div class="portfolio-items">
             {% for category in categories %}
             <div class="portfolio-main-item">
-            <a href="{% url 'portfolio_cat' category.name_slug %}">  <img src="{{ category.image_small.url }}" alt=""></a>
+            <a href="{% url 'portfolio_cat' category.name_slug %}">  <img src="{{ category.image.url }}" alt=""></a>
                 <h5><a href="{% url 'portfolio_cat' category.name_slug %}">  {{ category.name }}</a></h5>
             </div>
            {% endfor %}

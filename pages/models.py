@@ -1,15 +1,12 @@
 from pytils.translit import slugify
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
-from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
 
 
 
 
 class AboutPageClients(models.Model):
     image = models.ImageField('О нас - Изображения секция 2', upload_to='about_images', blank=False)
-    image_small = ImageSpecField(source='image', processors=[ResizeToFill(270, 220)], format='JPEG', options={'quality':80})
     is_active = models.BooleanField('Показывать на странице?', default=True)
 
     def __str__(self):
@@ -21,7 +18,6 @@ class AboutPageClients(models.Model):
 
 class AboutPageWork(models.Model):
     image = models.ImageField('О нас - Изображения секция 3', upload_to='about_images', blank=False)
-    image_small = ImageSpecField(source='image', processors=[ResizeToFill(270, 220)], format='JPEG', options={'quality':80})
     is_active = models.BooleanField('Показывать на странице?', default=True)
 
     def __str__(self):
@@ -103,8 +99,7 @@ class Category(models.Model):
     name = models.CharField('Название категории', max_length=30, blank=False, default='НАЗВАНИЕ КАТЕГОРИИ')
     name_slug = models.CharField( max_length=30, blank=True)
     image = models.ImageField('Картинка категории', upload_to='category_images', blank=False)
-    image_small = ImageSpecField(source='image', processors=[ResizeToFill(230, 290)], format='JPEG',
-                                 options={'quality': 80})
+
     title = models.CharField('Title ', max_length=30, blank=False,
                                             default='Категория')
     description = models.CharField('Description ', max_length=30, blank=False,
@@ -161,8 +156,7 @@ class Item(models.Model):
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='Изображение для товара')
     image = models.ImageField('Изображение товара', upload_to='item_images', blank=False)
-    image_small = ImageSpecField(source='image', processors=[ResizeToFill(230, 290)], format='JPEG',
-                                 options={'quality': 80})
+
 
     def __str__(self):
         if self.item:
