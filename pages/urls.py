@@ -14,7 +14,7 @@ urlpatterns = [
     path('sitemap.xml', views.sitemap, name='sitemap'),
     path('index.html', views.index, name='index.html'),
     path('index.php', views.index, name='index.php'),
-    path('getinfo/', views.getInfo, name='getInfo'),
+    path('changeInfo/', views.changeInfo, name='getInfo'),
 
 
 

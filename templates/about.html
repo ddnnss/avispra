@@ -78,11 +78,10 @@
     </div>
     <script src="https://cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>
     <script>
-    var ell=false
+
 
         function editInfo(el,target) {
-        ell = el
-            console.log(ell)
+
             let senddata_btn = document.getElementById('sendData')
             senddata_btn.dataset.target = target
             let editmodal = document.getElementById('editModal');
@@ -99,25 +98,20 @@
         }
 
     function sendData() {
-         console.log(ell)
+
             var data = CKEDITOR.instances.editor.getData();
-         let editmodal = document.getElementById('editModal');
             let csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].defaultValue
-            let textarea = document.getElementById('textarea')
-        textarea.remove()
-            ell.innerHTML = data
-            editmodal.style.display = "none";
-    {#    var xhr = new XMLHttpRequest();#}
-    {#    xhr.open('POST', 'call_form.php', true);#}
-    {#    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');#}
-    {#    xhr.onload = function () {#}
-    {##}
-	{#	console.log(this.responseText);#}
-	{#	btn = document.getElementById("modal-submit-btn")#}
-	{#	btn.innerHTML = 'РћРўРџР РђР’Р›Р•РќРћ'#}
-	{#	btn.disabled = true#}
-	{#	};#}
-	{#xhr.send('csrfmiddlewaretoken='+csrfmiddlewaretoken+'&target='+target+'&data='+data);#}
+            let target = document.getElementById("sendData").dataset.target
+        console.log(target)
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'changeInfo/', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+
+		document.location.reload(true);
+		};
+	xhr.send('csrfmiddlewaretoken='+csrfmiddlewaretoken+'&target='+target+'&data='+data);
 
     }
 

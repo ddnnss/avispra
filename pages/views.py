@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 from .models import *
 #from django.http import HttpResponseRedirect
@@ -116,13 +117,15 @@ def services(request):
     services_text1_section1 = page_info.services_text1_section1
     return render(request, 'services.html', locals())
 
-def getInfo(request):
-    return_dict = {}
+def changeInfo(request):
+
     print(request.POST)
     data = request.POST.get('target')
-
-    if data == 'about_text1_section1':
+    print(request.POST.get('target'))
+    if request.POST.get('target') == 'about_text1_section1':
+        print('sdsd')
         page = Page.objects.get(id=1)
-        return_dict['text'] = page.about_text1_section1
+        page.about_text1_section1 = request.POST.get('data')
+        page.save(force_update=True)
 
-    return JsonResponse(return_dict)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
