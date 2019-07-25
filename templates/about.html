@@ -5,8 +5,8 @@
     <section class="slider">
         <div class="my-slider">
             {% for slide in slider %}
-            <div><img src="{{ slide.image.url }}" alt=""></div>
-           {% endfor %}
+                <div><img src="{{ slide.image.url }}" alt=""></div>
+            {% endfor %}
 
         </div>
     </section>
@@ -20,8 +20,18 @@
             </div>
             <h1 class="mb30">{{ header_section1 }}</h1>
             <div class="about-info">
-                <div class="admin-edit" onclick="editInfo(this,'about_text1_section1')">{{ text1_section1 | safe }}</div>
-                <div>{{ text2_section1 | safe }}</div>
+
+                {% if user.is_authenticated %}
+                    <div class="admin-edit" onclick="editInfo(this,'about_text1_section1')">{{ text1_section1 | safe }}</div>
+                {% else %}
+                    <div>{{ text1_section1 | safe }}</div>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <div class="admin-edit" onclick="editInfo(this,'about_text2_section1')">{{ text2_section1 | safe }}</div>
+                {% else %}
+                     <div>{{ text2_section1 | safe }}</div>
+                {% endif %}
+
 
 
             </div>
@@ -33,9 +43,9 @@
             {{ text1_section2 |safe }}
             <div class="clients">
                 {% for client in clients %}
-                <div class="client">
-                    <img class="admin-edit" src="{{ client.image.url }}" alt="">
-                </div>
+                    <div class="client">
+                        <img class="admin-edit" src="{{ client.image.url }}" alt="">
+                    </div>
                 {% endfor %}
 
             </div>
@@ -47,9 +57,9 @@
             <h3 class="mb50">{{ header_section3 }}</h3>
             <div class="manufacture-items">
                 {% for work in works %}
-                <div>
-                    <img src="{{ work.image.url }}" alt="">
-                </div>
+                    <div>
+                        <img src="{{ work.image.url }}" alt="">
+                    </div>
                 {% endfor %}
 
 
@@ -58,41 +68,56 @@
         </div>
     </section>
     {% include 'order_form.html' %}
-     <div style="display: none" id="editModal" class="modal">
+    <div style="display: none" id="editModal" class="editModal">
 
-        <div id="modal-content" class="modal-content">
-<a style="margin-bottom: 30px" href="#">сохранить</a>
+        <div id="modal-content" class="editmodal-content">
+            <a style="margin-bottom: 30px" id="sendData" data-target="" href="javascript:void(0)" onclick="sendData()">сохранить</a>
         </div>
 
 
     </div>
     <script src="https://cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>
     <script>
+    var ell=false
 
-    function editInfo(el,target) {
-        let editmodal = document.getElementById('editModal');
-        let editor = document.getElementById('editor');
-        let modal_content = document.getElementById('modal-content')
-        let csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].defaultValue
-        console.log(csrfmiddlewaretoken)
-        editmodal.style.display = "block";
-        let textarea = document.createElement('textarea')
-        textarea.setAttribute("id", "editor");
-        textarea.innerText = el.innerHTML
-        modal_content.appendChild(textarea)
-        CKEDITOR.replace( 'editor' );
+        function editInfo(el,target) {
+        ell = el
+            console.log(ell)
+            let senddata_btn = document.getElementById('sendData')
+            senddata_btn.dataset.target = target
+            let editmodal = document.getElementById('editModal');
+            let editor = document.getElementById('editor');
+            let modal_content = document.getElementById('modal-content')
 
 
+            editmodal.style.display = "block";
+            let textarea = document.createElement('textarea')
+            textarea.setAttribute("id", "editor");
+            textarea.innerText = el.innerHTML
+            modal_content.appendChild(textarea)
+            CKEDITOR.replace( 'editor' );
+        }
 
-
-
-
-
-
-
-
-
-
+    function sendData() {
+         console.log(ell)
+            var data = CKEDITOR.instances.editor.getData();
+         let editmodal = document.getElementById('editModal');
+            let csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].defaultValue
+            let textarea = document.getElementById('textarea')
+        textarea.remove()
+            ell.innerHTML = data
+            editmodal.style.display = "none";
+    {#    var xhr = new XMLHttpRequest();#}
+    {#    xhr.open('POST', 'call_form.php', true);#}
+    {#    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');#}
+    {#    xhr.onload = function () {#}
+    {##}
+	{#	console.log(this.responseText);#}
+	{#	btn = document.getElementById("modal-submit-btn")#}
+	{#	btn.innerHTML = 'РћРўРџР РђР’Р›Р•РќРћ'#}
+	{#	btn.disabled = true#}
+	{#	};#}
+	{#xhr.send('csrfmiddlewaretoken='+csrfmiddlewaretoken+'&target='+target+'&data='+data);#}
 
     }
 
