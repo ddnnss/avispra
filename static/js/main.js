@@ -2,8 +2,9 @@ let mobile_button = document.getElementById("mobile-toggle");
 let mobile_menu = document.getElementById("mobile-menu");
 let modal = document.getElementById('myModal');
 let modalCloseBtn = document.getElementsByClassName("close")[0];
+
 mobile_button.onclick = function () {
-      mobile_menu.classList.toggle('is-visible');
+    mobile_menu.classList.toggle('is-visible');
 
 }
 
@@ -28,15 +29,14 @@ function sendFormStatic() {
     let label_name = document.getElementById('name')
     let label_phone = document.getElementById('phone')
     let label_email = document.getElementById('email')
-        btn.setAttribute('disabled', 'disabled');
-        btn.firstChild.data = 'Отправка ...'
-        name.classList.remove('error-field')
-        phone.classList.remove('error-field')
-        email.classList.remove('error-field')
-        label_name.innerText = ''
-        label_phone.innerText = ''
-        label_email.innerText = ''
-
+    btn.setAttribute('disabled', 'disabled');
+    btn.firstChild.data = 'Отправка ...'
+    name.classList.remove('error-field')
+    phone.classList.remove('error-field')
+    email.classList.remove('error-field')
+    label_name.innerText = ''
+    label_phone.innerText = ''
+    label_email.innerText = ''
 
     let fd = new FormData();
 
@@ -47,36 +47,35 @@ function sendFormStatic() {
     fd.append('file',file)
 
     let xhr = new XMLHttpRequest();
-	xhr.open('POST', '/createform', true);
-	xhr.onload = function () {
-		console.log(this.response);
-            if (JSON.parse(this.response)['result'] === 'ok'){
+    xhr.open('POST', '/createform', true);
+    xhr.onload = function () {
+        console.log(this.response);
+        if (JSON.parse(this.response)['result'] === 'ok'){
             btn.style.display = 'none'
             div.style.display = 'block'
-            }
-            else{
-                btn.removeAttribute('disabled')
-                btn.firstChild.data = 'отправить'
-                if (JSON.parse(this.response)['errors']['name']){
-                    label_name.innerText = JSON.parse(this.response)['errors']['name']
-                    name.classList.add("error-field");
-
-                }
-                if (JSON.parse(this.response)['errors']['phone']){
-                    label_phone.innerText = JSON.parse(this.response)['errors']['phone']
-                    phone.classList.add("error-field");
-
-                }
-                  if (JSON.parse(this.response)['errors']['email']){
-                    label_email.innerText = JSON.parse(this.response)['errors']['email']
-                    email.classList.add("error-field");
-
-                }
+        }
+        else{
+            btn.removeAttribute('disabled')
+            btn.firstChild.data = 'отправить'
+            if (JSON.parse(this.response)['errors']['name']){
+                label_name.innerText = JSON.parse(this.response)['errors']['name']
+                name.classList.add("error-field");
 
             }
-		};
-	xhr.send(fd);
+            if (JSON.parse(this.response)['errors']['phone']){
+                label_phone.innerText = JSON.parse(this.response)['errors']['phone']
+                phone.classList.add("error-field");
 
+            }
+            if (JSON.parse(this.response)['errors']['email']){
+                label_email.innerText = JSON.parse(this.response)['errors']['email']
+                email.classList.add("error-field");
+
+            }
+
+        }
+    };
+    xhr.send(fd);
 }
 
 function sendFormModal(){
@@ -90,15 +89,14 @@ function sendFormModal(){
     let label_name = document.getElementById('modal-name')
     let label_phone = document.getElementById('modal-phone')
     let label_email = document.getElementById('modal-email')
-        btn.setAttribute('disabled', 'disabled');
-        btn.firstChild.data = 'Отправка ...'
-        name.classList.remove('error-field')
-        phone.classList.remove('error-field')
-        email.classList.remove('error-field')
-        label_name.innerText = ''
-        label_phone.innerText = ''
-        label_email.innerText = ''
-
+    btn.setAttribute('disabled', 'disabled');
+    btn.firstChild.data = 'Отправка ...'
+    name.classList.remove('error-field')
+    phone.classList.remove('error-field')
+    email.classList.remove('error-field')
+    label_name.innerText = ''
+    label_phone.innerText = ''
+    label_email.innerText = ''
 
     let fd = new FormData();
 
@@ -109,33 +107,34 @@ function sendFormModal(){
     fd.append('file',file)
 
     let xhr = new XMLHttpRequest();
-	xhr.open('POST', '/createform', true);
-	xhr.onload = function () {
-		console.log(this.response);
-            if (JSON.parse(this.response)['result'] === 'ok'){
+    xhr.open('POST', '/createform', true);
+    xhr.onload = function () {
+        console.log(this.response);
+        if (JSON.parse(this.response)['result'] === 'ok'){
             btn.style.display = 'none'
             div.style.display = 'block'
-            }
-            else{
-                btn.removeAttribute('disabled')
-                btn.firstChild.data = 'отправить'
-                if (JSON.parse(this.response)['errors']['name']){
-                    label_name.innerText = JSON.parse(this.response)['errors']['name']
-                    name.classList.add("error-field");
-
-                }
-                if (JSON.parse(this.response)['errors']['phone']){
-                    label_phone.innerText = JSON.parse(this.response)['errors']['phone']
-                    phone.classList.add("error-field");
-
-                }
-                  if (JSON.parse(this.response)['errors']['email']){
-                    label_email.innerText = JSON.parse(this.response)['errors']['email']
-                    email.classList.add("error-field");
-
-                }
+        }
+        else{
+            btn.removeAttribute('disabled')
+            btn.firstChild.data = 'отправить'
+            if (JSON.parse(this.response)['errors']['name']){
+                label_name.innerText = JSON.parse(this.response)['errors']['name']
+                name.classList.add("error-field");
 
             }
-		};
-	xhr.send(fd);
+            if (JSON.parse(this.response)['errors']['phone']){
+                label_phone.innerText = JSON.parse(this.response)['errors']['phone']
+                phone.classList.add("error-field");
+
+            }
+            if (JSON.parse(this.response)['errors']['email']){
+                label_email.innerText = JSON.parse(this.response)['errors']['email']
+                email.classList.add("error-field");
+
+            }
+
+        }
+    };
+    xhr.send(fd);
 }
+

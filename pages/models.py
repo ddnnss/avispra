@@ -6,6 +6,7 @@ from django.utils.safestring import mark_safe
 
 
 
+
 class AboutPageClients(models.Model):
     image = models.ImageField('О нас - Изображения секция 2', upload_to='about_images', blank=False)
     is_active = models.BooleanField('Показывать на странице?', default=True)

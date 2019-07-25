@@ -6,6 +6,7 @@ from .models import *
 from django.http import JsonResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from .forms import CreateForm
+from .forms import *
 import json
 
 def index(request):
@@ -118,14 +119,158 @@ def services(request):
     return render(request, 'services.html', locals())
 
 def changeInfo(request):
-
+    return_dict = {}
     print(request.POST)
-    data = request.POST.get('target')
-    print(request.POST.get('target'))
-    if request.POST.get('target') == 'about_text1_section1':
-        print('sdsd')
+    target = request.POST.get('target')
+    data = request.POST.get('data')
+    if target == 'about_text1_section1':
         page = Page.objects.get(id=1)
-        page.about_text1_section1 = request.POST.get('data')
+        page.about_text1_section1 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'about_text2_section1':
+        page = Page.objects.get(id=1)
+        page.about_text2_section1 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'about_text1_section2':
+        page = Page.objects.get(id=1)
+        page.about_text1_section2 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'contact_text1_section1':
+        page = Page.objects.get(id=1)
+        page.contact_text1_section1 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'contact_text1_section2':
+        page = Page.objects.get(id=1)
+        page.contact_text1_section2 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'services_text1_section1':
+        page = Page.objects.get(id=1)
+        page.services_text1_section1 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+
+    return JsonResponse(return_dict)
+
+def changeHeader(request):
+    return_dict = {}
+    print(request.POST)
+    target = request.POST.get('target')
+    data = request.POST.get('data')
+    if target == 'about_header_section1':
+        page = Page.objects.get(id=1)
+        page.about_header_section1 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'about_header_section2':
+        page = Page.objects.get(id=1)
+        page.about_header_section2 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'about_header_section3':
+        page = Page.objects.get(id=1)
+        page.about_header_section3 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'contact_header_section1':
+        page = Page.objects.get(id=1)
+        page.contact_header_section1 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'contact_header_section2':
+        page = Page.objects.get(id=1)
+        page.contact_header_section2 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'service_header_section1':
+        page = Page.objects.get(id=1)
+        page.services_header_section1 = data
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+
+    return JsonResponse(return_dict)
+
+def saveSEO(request):
+    return_dict = {}
+    print(request.POST)
+    target = request.POST.get('target')
+    title = request.POST.get('title')
+    description = request.POST.get('description')
+    keywords = request.POST.get('keywords')
+    if target == 'about':
+        page = Page.objects.get(id=1)
+        page.about_title = title
+        page.about_description = description
+        page.about_keywords = keywords
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'contacts':
+        page = Page.objects.get(id=1)
+        page.contact_title = title
+        page.contact_description = description
+        page.contact_keywords = keywords
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+    elif target == 'service':
+        page = Page.objects.get(id=1)
+        page.services_item_title = title
+        page.services_item_description = description
+        page.services_item_keywords = keywords
         page.save(force_update=True)
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return_dict['result'] = 'success'
+
+    return JsonResponse(return_dict)
+
+def changeImg(request):
+
+    return_dict = {}
+    print(request.POST)
+    target = request.POST.get('target')
+    id = int(request.POST.get('id'))
+    file = request.POST.get('file')
+
+    if target == 'client':
+        client_img = AboutPageClients.objects.get(id=id)
+        form = AboutClientsForm(request.POST, request.FILES, instance=client_img)
+        if form.is_valid():
+            form.save()
+
+        return_dict['result'] = 'success'
+    elif target == 'work':
+        work_img = AboutPageWork.objects.get(id=id)
+        form = AboutWorkForm(request.POST, request.FILES, instance=work_img)
+        if form.is_valid():
+            form.save()
+
+        return_dict['result'] = 'success'
+    elif target == 'about_header_section3':
+        page = Page.objects.get(id=1)
+        page.about_header_section3 = ''
+        page.save(force_update=True)
+        return_dict['result'] = 'success'
+
+    return JsonResponse(return_dict)
+
+def saveServiceInfo(request):
+    return_dict = {}
+    print(request.POST)
+    mode = request.POST.get('mode')
+    header = request.POST.get('header')
+    id = int(request.POST.get('id'))
+    text = request.POST.get('text')
+
+    if mode == 'update':
+        service = Services.objects.get(id=id)
+        service.header = header
+        service.text = text
+        service.save(force_update=True)
+    if mode == 'new':
+        Services.objects.create(header=header, text=text).save()
+
+
+    return JsonResponse(return_dict)

@@ -3,25 +3,146 @@
 
 {% block content %}
     <section class="service-main">
-    <div class="container">
-        <div class="breadcrumbs mb30">
-            <ul>
-                <li><a href="/">Главная</a></li>
-                <li>Услуги</li>
-            </ul>
+        <div class="container">
+            <div class="breadcrumbs mb30">
+                <ul>
+                    <li><a href="/">Главная</a></li>
+                    <li>Услуги</li>
+                </ul>
+            </div>
+            {% if user.is_authenticated %}
+                <div>
+                    <label for="page_title">TITLE страницы</label>
+                    <input class="seo_input" id="page_title" value="{{ title }}">
+                    <label for="page_description">DESCRIPTION страницы</label>
+                    <input class="seo_input" id="page_description" value="{{ description }}">
+                    <label for="page_keywords">KEYWORDS страницы</label>
+                    <input class="seo_input" id="page_keywords" value="{{ keywords }}">
+                    <input type="hidden" id="page_target" value="service">
+                    <a  class="btn seo-btn" data-target="" href="javascript:void(0)" onclick="saveSEO(this)">Сохранить</a>
+                </div>
+
+            {% endif %}
+
+
+            <div class="services">
+                {% if user.is_authenticated %}
+                    <h1 class="admin-edit" onclick="editHeader(this,'service_header_section1')">{{ header_section1 }}</h1>
+                    <div id="service_header_section1" class="edit-info-input">
+                        <input id="service_header_section1_input" style=" padding: 10px" value="{{ header_section1 }}">
+                        <a class="btn" id="service_header_section1_btn" data-target="" href="javascript:void(0)" onclick="saveHeader(this)">Сохранить</a>
+                    </div>
+
+                {% else %}
+                    <h1 >{{ header_section1 }}</h1>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                    <div class="admin-edit" onclick="editInfo(this,'services_text1_section1')"> {{ services_text1_section1 |safe }}</div>
+                {% else %}
+                    {{ services_text1_section1 |safe }}
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                    <a class="btn"  style="display: block; width: 140px; margin-top: 30px;"  href="javascript:void(0)" onclick="newService()">Добавить услугу</a>
+                {% endif %}
+                {% for service in all_services %}
+                    {% if user.is_authenticated %}
+                        <div class="admin-edit" data-id="{{ service.id }}" onclick="editServiceInfo(this)">
+                            <h3 id="header_{{ service.id }}">{{ service.header }}</h3>
+                            <div id="text_{{ service.id }}">{{ service.text | safe }}</div>
+                        </div>
+                    {% else %}
+                        <h3>{{ service.header }}</h3>
+                        {{ service.text | safe }}
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
-        <div class="services">
-            <h1 >{{ header_section1 }}</h1>
-            {{ services_text1_section1 |safe }}
-            {% for service in all_services %}
-            <h3>{{ service.header }}</h3>
-            {{ service.text | safe }}
-            {% endfor %}
+    </section>
+
+    {% include 'order_form.html' %}
+    {% if user.is_authenticated %}
+        {% include 'editmodal.html' %}
+    {% endif %}
+
+    <div style="display: none" id="editModalService" class="editModal">
+        <div style="padding: 10px" id="modal-content" class="editmodal-content">
+            <label for="header">Заголоков</label>
+            <input  id="header">
+            <label for="text">Текст</label>
+            <textarea id="text"></textarea>
+
+            <div style="margin: 20px">
+                <a class="btn" style="margin-bottom: 30px" id="sendDataService" data-target="" href="javascript:void(0)" onclick="saveService()">сохранить</a>
+                <a class="btn" href="javascript:void(0)" onclick="closeEditModalService()">отмена</a>
+            </div>
         </div>
     </div>
-</section>
 
-{% include 'order_form.html' %}
+
+    <script>
+        var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].defaultValue
+        let editmodal = document.getElementById('editModalService');
+        let mode=''
+        let id = ''
+
+        function newService() {
+            mode = 'new'
+            $('#header').val('')
+
+            CKEDITOR.replace( 'text' );
+            CKEDITOR.instances['text'].setData('');
+            editmodal.style.display = "block";
+        }
+
+        function editServiceInfo(el) {
+            id = el.dataset.id
+            mode = 'update'
+            let header_value = document.getElementById('header_'+id).innerText
+            let service_text = document.getElementById('text_'+id).innerHTML
+
+            $('#header').val(header_value)
+            CKEDITOR.replace( 'text' );
+            CKEDITOR.instances['text'].setData(service_text);
+            editmodal.style.display = "block";
+        }
+
+        function saveService() {
+
+            console.log(header)
+            if( mode === 'update'){
+                let header = document.getElementById('header_'+id)
+                let text = document.getElementById('text_'+id)
+               header.innerText = document.getElementById('header').value
+              text.innerHTML =  CKEDITOR.instances.text.getData()
+            }else{
+                id='0'
+                let header = document.getElementById('header')
+
+            }
+            editmodal.style.display = "none";
+            $.ajax({
+                url: "/saveServiceInfo/",
+                type: "POST",
+                data: ({csrfmiddlewaretoken: csrfmiddlewaretoken, id: id, header: header.innerText, text:CKEDITOR.instances.text.getData(), mode:mode}),
+                dataType: "html",
+                success: function (msg) {
+                    editmodal.style.display = "none";
+                },
+                error: function (msg) {
+
+                }
+            });
+
+        }
+
+        function closeEditModalService() {
+            editmodal.style.display = "none";
+        }
+
+
+    </script>
 {% endblock %}
 
 {% block js %}

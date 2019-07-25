@@ -15,6 +15,10 @@ urlpatterns = [
     path('index.html', views.index, name='index.html'),
     path('index.php', views.index, name='index.php'),
     path('changeInfo/', views.changeInfo, name='getInfo'),
+    path('changeHeader/', views.changeHeader, name='changeHeader'),
+    path('saveSEO/', views.saveSEO, name='saveSEO'),
+    path('changeImg/', views.changeImg, name='changeImg'),
+    path('saveServiceInfo/', views.saveServiceInfo, name='saveServiceInfo'),
 
 
 

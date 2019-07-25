@@ -14,17 +14,61 @@
                 <li>Контакты</li>
             </ul>
         </div>
+        {% if user.is_authenticated %}
+            <div>
+             <label for="page_title">TITLE страницы</label>
+            <input class="seo_input" id="page_title" value="{{ title }}">
+            <label for="page_description">DESCRIPTION страницы</label>
+            <input class="seo_input" id="page_description" value="{{ description }}">
+            <label for="page_keywords">KEYWORDS страницы</label>
+            <input class="seo_input" id="page_keywords" value="{{ keywords }}">
+                <input type="hidden" id="page_target" value="contacts">
+             <a  class="btn seo-btn" data-target="" href="javascript:void(0)" onclick="saveSEO(this)">Сохранить</a>
+            </div>
 
-        <h1 class="mb30">{{ contact_header_section1 }}</h1>
-        <div class="mb50">
-           {{ contact_text1_section1 |safe }}
-        </div>
+         {% endif %}
 
-        <h3 class="mb30">{{ contact_header_section2 }}</h3>
-        {{ contact_text1_section2 |safe }}
+    {% if user.is_authenticated %}
+                <h1 class="mb30 admin-edit" onclick="editHeader(this,'contact_header_section1')">{{ contact_header_section1 }}</h1>
+                <div id="contact_header_section1" class="edit-info-input">
+                    <input id="contact_header_section1_input" style=" padding: 10px" value="{{ contact_header_section1 }}">
+                    <a class="btn" id="contact_header_section1_btn" data-target="" href="javascript:void(0)" onclick="saveHeader(this)">Сохранить</a>
+                </div>
+
+            {% else %}
+               <h1 class="mb30">{{ contact_header_section1 }}</h1>
+            {% endif %}
+
+             {% if user.is_authenticated %}
+                    <div class="mb50 admin-edit" onclick="editInfo(this,'contact_text1_section1')">{{ contact_text1_section1 | safe }}</div>
+                {% else %}
+                    <div class="mb50">
+                       {{ contact_text1_section1 |safe }}
+                    </div>
+                {% endif %}
+
+        {% if user.is_authenticated %}
+                <h1 class="mb30 admin-edit" onclick="editHeader(this,'contact_header_section2')">{{ contact_header_section2 }}</h1>
+                <div id="contact_header_section2" class="edit-info-input">
+                    <input id="contact_header_section2_input" style=" padding: 10px" value="{{ contact_header_section2 }}">
+                    <a class="btn" id="contact_header_section2_btn" data-target="" href="javascript:void(0)" onclick="saveHeader(this)">Сохранить</a>
+                </div>
+
+            {% else %}
+                <h3 class="mb30">{{ contact_header_section2 }}</h3>
+            {% endif %}
+        {% if user.is_authenticated %}
+                    <div class="mb50 admin-edit" onclick="editInfo(this,'contact_text1_section2')">{{ contact_text1_section2 | safe }}</div>
+                {% else %}
+                    {{ contact_text1_section2 |safe }}
+                {% endif %}
+
     </div>
 
 </section>
+     {% if user.is_authenticated %}
+       {% include 'editmodal.html' %}
+    {% endif %}
 
 {% endblock %}
 

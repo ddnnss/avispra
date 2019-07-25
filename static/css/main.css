@@ -756,7 +756,7 @@ footer {
   flex-direction: column;
   background: #ffffff;
   max-width: 50%;
-  /* height: 100%; */
+  height: auto;
   text-align: center;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -764,3 +764,39 @@ footer {
   /* padding: 0 15px; */
   margin: 0 auto;
 }
+
+.edit-info-input{
+  display: none;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.edit-info-input input{
+  flex-basis: 80%;
+}
+
+.seo_input{
+  display: block;
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 100%;
+}
+
+.seo-btn{
+  display: block;
+  width: 85px;
+  margin: 0 auto;
+}
+.edit-info-file {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1; }
+
+.edit-info-file + label:hover {
+  cursor: pointer;
+  border: 1px solid red;
+  display: block;
+  padding: 30px 0; }

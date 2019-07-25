@@ -18,7 +18,32 @@
                     <li>О нас</li>
                 </ul>
             </div>
-            <h1 class="mb30">{{ header_section1 }}</h1>
+        {% if user.is_authenticated %}
+            <div>
+             <label for="page_title">TITLE страницы</label>
+            <input class="seo_input" id="page_title" value="{{ title }}">
+            <label for="page_description">DESCRIPTION страницы</label>
+            <input class="seo_input" id="page_description" value="{{ description }}">
+            <label for="page_keywords">KEYWORDS страницы</label>
+            <input class="seo_input" id="page_keywords" value="{{ keywords }}">
+                <input type="hidden" id="page_target" value="about">
+             <a  class="btn seo-btn" data-target="" href="javascript:void(0)" onclick="saveSEO(this)">Сохранить</a>
+            </div>
+
+         {% endif %}
+
+            {% if user.is_authenticated %}
+                <h1 class="mb30 admin-edit" onclick="editHeader(this,'about_header_section1')">{{ header_section1 }}</h1>
+                <div id="about_header_section1" class="edit-info-input">
+                    <input id="about_header_section1_input" style=" padding: 10px" value="{{ header_section1 }}">
+                    <a class="btn" id="about_header_section1_btn" data-target="" href="javascript:void(0)" onclick="saveHeader(this)">Сохранить</a>
+                </div>
+
+            {% else %}
+                <h1 class="mb30">{{ header_section1 }}</h1>
+            {% endif %}
+
+
             <div class="about-info">
 
                 {% if user.is_authenticated %}
@@ -26,6 +51,7 @@
                 {% else %}
                     <div>{{ text1_section1 | safe }}</div>
                 {% endif %}
+
                 {% if user.is_authenticated %}
                     <div class="admin-edit" onclick="editInfo(this,'about_text2_section1')">{{ text2_section1 | safe }}</div>
                 {% else %}
@@ -39,12 +65,29 @@
     </section>
     <section class="our-clients">
         <div class="container">
-            <h3 class="mb30">{{ header_section2 }}</h3>
-            {{ text1_section2 |safe }}
+          {% if user.is_authenticated %}
+                <h3 class="mb30 admin-edit" onclick="editHeader(this,'about_header_section2')">{{ header_section2 }}</h3>
+                <div id="about_header_section2" class="edit-info-input">
+                    <input id="about_header_section2_input" style=" padding: 10px" value="{{ header_section2 }}">
+                    <a class="btn" id="about_header_section2_btn" data-target="" href="javascript:void(0)" onclick="saveHeader(this)">Сохранить</a>
+                </div>
+
+            {% else %}
+                <h3 class="mb30">{{ header_section2 }}</h3>
+            {% endif %}
+
+        {% if user.is_authenticated %}
+                    <div class="admin-edit" onclick="editInfo(this,'about_text1_section2')"> {{ text1_section2 |safe }}</div>
+                {% else %}
+                    {{ text1_section2 |safe }}
+                {% endif %}
+
             <div class="clients">
                 {% for client in clients %}
-                    <div class="client">
-                        <img class="admin-edit" src="{{ client.image.url }}" alt="">
+                    <div class="client ">
+                        <input id="client_{{client.id}}" data-target="client" data-id="{{client.id}}" type="file" onchange="changeImg(this)"  class="edit-info-file">
+                        <label for="client_{{client.id}}"  >
+                        <img id="client_img_{{ client.id }}"  src="{{ client.image.url }}" alt=""></label>
                     </div>
                 {% endfor %}
 
@@ -54,11 +97,24 @@
     </section>
     <section class="manufacture">
         <div class="container">
-            <h3 class="mb50">{{ header_section3 }}</h3>
+          {% if user.is_authenticated %}
+                <h3 class="mb30 admin-edit" onclick="editHeader(this,'about_header_section3')">{{ header_section3 }}</h3>
+                <div id="about_header_section3" class="edit-info-input">
+                    <input id="about_header_section3_input" style=" padding: 10px" value="{{ header_section3 }}">
+                    <a class="btn" id="about_header_section3_btn" data-target="" href="javascript:void(0)" onclick="saveHeader(this)">Сохранить</a>
+                </div>
+
+            {% else %}
+                     <h3 class="mb50">{{ header_section3 }}</h3>
+            {% endif %}
+
             <div class="manufacture-items">
                 {% for work in works %}
                     <div>
-                        <img src="{{ work.image.url }}" alt="">
+                        <input id="work_{{work.id}}" data-target="work" data-id="{{work.id}}" type="file" onchange="changeImg(this)"  class="edit-info-file">
+                        <label for="work_{{work.id}}"  >
+                        <img id="work_img_{{ work.id }}"  src="{{ work.image.url }}" alt=""></label>
+
                     </div>
                 {% endfor %}
 
@@ -68,54 +124,11 @@
         </div>
     </section>
     {% include 'order_form.html' %}
-    <div style="display: none" id="editModal" class="editModal">
-
-        <div id="modal-content" class="editmodal-content">
-            <a style="margin-bottom: 30px" id="sendData" data-target="" href="javascript:void(0)" onclick="sendData()">сохранить</a>
-        </div>
 
 
-    </div>
-    <script src="https://cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>
-    <script>
-
-
-        function editInfo(el,target) {
-
-            let senddata_btn = document.getElementById('sendData')
-            senddata_btn.dataset.target = target
-            let editmodal = document.getElementById('editModal');
-            let editor = document.getElementById('editor');
-            let modal_content = document.getElementById('modal-content')
-
-
-            editmodal.style.display = "block";
-            let textarea = document.createElement('textarea')
-            textarea.setAttribute("id", "editor");
-            textarea.innerText = el.innerHTML
-            modal_content.appendChild(textarea)
-            CKEDITOR.replace( 'editor' );
-        }
-
-    function sendData() {
-
-            var data = CKEDITOR.instances.editor.getData();
-            let csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].defaultValue
-            let target = document.getElementById("sendData").dataset.target
-        console.log(target)
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'changeInfo/', true);
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        xhr.onload = function () {
-
-		document.location.reload(true);
-		};
-	xhr.send('csrfmiddlewaretoken='+csrfmiddlewaretoken+'&target='+target+'&data='+data);
-
-    }
-
-    </script>
+ {% if user.is_authenticated %}
+       {% include 'editmodal.html' %}
+    {% endif %}
 
 
 
@@ -123,6 +136,7 @@
 {% endblock %}
 
 {% block js %}
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/min/tiny-slider.js"></script>
     <script>
         var slider = tns({

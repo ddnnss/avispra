@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import Forms
+from .models import *
 
 
 
@@ -13,3 +13,21 @@ class CreateForm(ModelForm):
             'email',
             'file',
         )
+
+
+class AboutClientsForm(ModelForm):
+    class Meta:
+        model = AboutPageClients
+        fields = (
+            'image',
+
+        )
+
+class AboutWorkForm(ModelForm):
+    class Meta:
+        model = AboutPageWork
+        fields = (
+            'image',
+
+        )
+
