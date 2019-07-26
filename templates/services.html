@@ -48,10 +48,14 @@
                 {% endif %}
                 {% for service in all_services %}
                     {% if user.is_authenticated %}
-                        <div class="admin-edit" data-id="{{ service.id }}" onclick="editServiceInfo(this)">
-                            <h3 id="header_{{ service.id }}">{{ service.header }}</h3>
-                            <div id="text_{{ service.id }}">{{ service.text | safe }}</div>
+
+                        <div id="all_servives">
+                             <div {% if forloop.last %}id="last_sevice"{% endif %} class="admin-edit" data-id="{{ service.id }}" onclick="editServiceInfo(this)">
+                                <h3 id="header_{{ service.id }}">{{ service.header }}</h3>
+                                <div id="text_{{ service.id }}">{{ service.text | safe }}</div>
+                            </div>
                         </div>
+
                     {% else %}
                         <h3>{{ service.header }}</h3>
                         {{ service.text | safe }}
@@ -84,12 +88,13 @@
     <script>
         var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].defaultValue
         let editmodal = document.getElementById('editModalService');
-        let mode=''
+
         let id = ''
 
         function newService() {
             mode = 'new'
             $('#header').val('')
+            $('#sendDataService').attr('onclick','newServiceSave()')
 
             CKEDITOR.replace( 'text' );
             CKEDITOR.instances['text'].setData('');
@@ -98,7 +103,8 @@
 
         function editServiceInfo(el) {
             id = el.dataset.id
-            mode = 'update'
+             $('#sendDataService').attr('onclick','saveService()')
+
             let header_value = document.getElementById('header_'+id).innerText
             let service_text = document.getElementById('text_'+id).innerHTML
 
@@ -109,18 +115,12 @@
         }
 
         function saveService() {
+            let mode = 'update'
+            let header = document.getElementById('header_'+id)
+            let text = document.getElementById('text_'+id)
+            header.innerText = document.getElementById('header').value
+            text.innerHTML =  CKEDITOR.instances.text.getData()
 
-            console.log(header)
-            if( mode === 'update'){
-                let header = document.getElementById('header_'+id)
-                let text = document.getElementById('text_'+id)
-               header.innerText = document.getElementById('header').value
-              text.innerHTML =  CKEDITOR.instances.text.getData()
-            }else{
-                id='0'
-                header = document.getElementById('header')
-
-            }
             editmodal.style.display = "none";
             $.ajax({
                 url: "/saveServiceInfo/",
@@ -128,6 +128,36 @@
                 data: ({csrfmiddlewaretoken: csrfmiddlewaretoken, id: id, header: header.innerText, text:CKEDITOR.instances.text.getData(), mode:mode}),
                 dataType: "html",
                 success: function (msg) {
+                    editmodal.style.display = "none";
+                },
+                error: function (msg) {
+
+                }
+            });
+
+        }
+
+        function newServiceSave() {
+            let mode = 'new'
+            let header = document.getElementById('header').value
+            id='0'
+
+            editmodal.style.display = "none";
+            $.ajax({
+                url: "/saveServiceInfo/",
+                type: "POST",
+                data: ({csrfmiddlewaretoken: csrfmiddlewaretoken, id: id, header: header, text:CKEDITOR.instances.text.getData(), mode:mode}),
+                dataType: "html",
+                success: function (data) {
+                    parsed_data = JSON.parse(data)
+                    console.log(parsed_data.id)
+
+
+                    $('#last_sevice').after(' <div class="admin-edit" data-id="'+ parsed_data.id +'" onclick="editServiceInfo(this)">\n' +
+                        '                                <h3 id="header_'+ parsed_data.id +'">'+ header +'</h3>\n' +
+                        '                                <div id="text_'+ parsed_data.id +'">'+ CKEDITOR.instances.text.getData() +'</div>\n' +
+                        '                            </div>')
+
                     editmodal.style.display = "none";
                 },
                 error: function (msg) {

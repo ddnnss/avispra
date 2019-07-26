@@ -270,7 +270,9 @@ def saveServiceInfo(request):
         service.text = text
         service.save(force_update=True)
     if mode == 'new':
-        Services.objects.create(header=header, text=text).save()
+        service_new = Services.objects.create(header=header, text=text)
+        service_new.save()
+        return_dict['id'] = str(service_new.id)
 
 
     return JsonResponse(return_dict)
