@@ -19,6 +19,7 @@
                     <label for="page_keywords">KEYWORDS страницы</label>
                     <input class="seo_input" id="page_keywords" value="{{ keywords }}">
                     <input type="hidden" id="page_target" value="service">
+                     <input type="hidden" id="page_type" value="static">
                     <a  class="btn seo-btn" data-target="" href="javascript:void(0)" onclick="saveSEO(this)">Сохранить</a>
                 </div>
 
@@ -50,7 +51,7 @@
                     {% if user.is_authenticated %}
 
                         <div id="all_servives">
-                             <div {% if forloop.last %}id="last_sevice"{% endif %} class="admin-edit" data-id="{{ service.id }}" onclick="editServiceInfo(this)">
+                             <div {% if forloop.last %}id="last_sevice"{% endif %} class="admin-edit service-item-{{ service.id }}" data-id="{{ service.id }}" onclick="editServiceInfo(this)">
                                 <h3 id="header_{{ service.id }}">{{ service.header }}</h3>
                                 <div id="text_{{ service.id }}">{{ service.text | safe }}</div>
                             </div>
@@ -78,7 +79,8 @@
             <textarea id="text"></textarea>
 
             <div style="margin: 20px">
-                <a class="btn" style="margin-bottom: 30px" id="sendDataService" data-target="" href="javascript:void(0)" onclick="saveService()">сохранить</a>
+                <a class="btn"  id="sendDataService" data-target="" href="javascript:void(0)" onclick="saveService()">сохранить</a>
+                 <a class="btn"  id="deleteService" data-id="" href="javascript:void(0)" onclick="deleteService(this)">удалить</a>
                 <a class="btn" href="javascript:void(0)" onclick="closeEditModalService()">отмена</a>
             </div>
         </div>
@@ -104,6 +106,7 @@
         function editServiceInfo(el) {
             id = el.dataset.id
              $('#sendDataService').attr('onclick','saveService()')
+            $('#deleteService').attr('data-id',id)
 
             let header_value = document.getElementById('header_'+id).innerText
             let service_text = document.getElementById('text_'+id).innerHTML
@@ -112,6 +115,26 @@
             CKEDITOR.replace( 'text' );
             CKEDITOR.instances['text'].setData(service_text);
             editmodal.style.display = "block";
+        }
+
+        function deleteService(el) {
+            let id = el.dataset.id
+
+             $.ajax({
+                url: "/deleteService/",
+                type: "POST",
+                data: ({csrfmiddlewaretoken: csrfmiddlewaretoken, id: id}),
+                dataType: "html",
+                success: function (msg) {
+                    $('.service-item-'+id).remove()
+                    editmodal.style.display = "none";
+                },
+                error: function (msg) {
+
+                }
+            });
+
+
         }
 
         function saveService() {

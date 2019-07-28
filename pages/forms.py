@@ -31,3 +31,24 @@ class AboutWorkForm(ModelForm):
 
         )
 
+
+
+class CategoryCreateForm(ModelForm):
+    class Meta:
+        model = Category
+        fields = (
+            'name',
+            'image',
+            'title',
+            'description',
+            'keywords',)
+
+class CategoryUpdateForm(ModelForm):
+    class Meta:
+        model = Category
+        fields = (
+            'name',
+            'image',
+            'title',
+            'description',
+            'keywords',)

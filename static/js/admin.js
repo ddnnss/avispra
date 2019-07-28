@@ -33,11 +33,12 @@ function saveSEO(el) {
     let description= document.getElementById('page_description').value
     let keywords= document.getElementById('page_keywords').value
     let target= document.getElementById('page_target').value
+    let page_type= document.getElementById('page_type').value
 
     $.ajax({
         url: "/saveSEO/",
         type: "POST",
-        data: ({ csrfmiddlewaretoken: csrfmiddlewaretoken,target: target, title: title, description:description, keywords:keywords}),
+        data: ({ csrfmiddlewaretoken: csrfmiddlewaretoken,target: target, page_type:page_type, title: title, description:description, keywords:keywords}),
         dataType: "html",
         success: function(msg) {
             el.innerText = 'СОХРАНЕНО'

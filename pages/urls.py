@@ -18,7 +18,12 @@ urlpatterns = [
     path('changeHeader/', views.changeHeader, name='changeHeader'),
     path('saveSEO/', views.saveSEO, name='saveSEO'),
     path('changeImg/', views.changeImg, name='changeImg'),
+    path('addImg/', views.addImg, name='addImg'),
+    path('delImg/', views.delImg, name='delImg'),
     path('saveServiceInfo/', views.saveServiceInfo, name='saveServiceInfo'),
+    path('deleteService/', views.deleteService, name='deleteService'),
+    path('create_update_category/', views.create_update_category, name='create_update_category'),
+
 
 
 

@@ -2,7 +2,8 @@ from pytils.translit import slugify
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils.safestring import mark_safe
-
+import os
+from django.db.models.signals import post_delete, pre_save
 
 
 
@@ -100,7 +101,7 @@ class Page(models.Model):
 class Category(models.Model):
     name = models.CharField('Название категории', max_length=30, blank=False, default='НАЗВАНИЕ КАТЕГОРИИ')
     name_slug = models.CharField( max_length=30, blank=True)
-    image = models.ImageField('Картинка категории', upload_to='category_images', blank=False)
+    image = models.ImageField('Картинка категории', upload_to='category_images', blank=True)
 
     title = models.CharField('Title ', max_length=30, blank=False,
                                             default='Категория')
@@ -189,3 +190,43 @@ class Forms(models.Model):
     phone = models.CharField('Поле - Телефон', max_length=255, blank=False, default='Нет данных')
     email = models.EmailField('Поле - Email', max_length=255, blank=True, default='Нет данных')
     file = models.FileField('Загруженный файл', upload_to='form_files',blank=True)
+
+
+
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    if instance.image:
+        os.remove(instance.image.path)
+
+
+def auto_delete_file_on_change_clients(sender, instance, **kwargs):
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = AboutPageClients.objects.get(pk=instance.pk).image
+    except AboutPageClients.DoesNotExist:
+        return False
+
+    new_file = instance.image
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)
+
+def auto_delete_file_on_change_work(sender, instance, **kwargs):
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = AboutPageWork.objects.get(pk=instance.pk).image
+    except AboutPageClients.DoesNotExist:
+        return False
+
+    new_file = instance.image
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)
+
+post_delete.connect(auto_delete_file_on_delete, sender=AboutPageClients)
+post_delete.connect(auto_delete_file_on_delete, sender=AboutPageWork)
+pre_save.connect(auto_delete_file_on_change_clients, sender=AboutPageClients)
+pre_save.connect(auto_delete_file_on_change_work, sender=AboutPageWork)

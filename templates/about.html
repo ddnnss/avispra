@@ -18,19 +18,20 @@
                     <li>О нас</li>
                 </ul>
             </div>
-        {% if user.is_authenticated %}
-            <div>
-             <label for="page_title">TITLE страницы</label>
-            <input class="seo_input" id="page_title" value="{{ title }}">
-            <label for="page_description">DESCRIPTION страницы</label>
-            <input class="seo_input" id="page_description" value="{{ description }}">
-            <label for="page_keywords">KEYWORDS страницы</label>
-            <input class="seo_input" id="page_keywords" value="{{ keywords }}">
-                <input type="hidden" id="page_target" value="about">
-             <a  class="btn seo-btn" data-target="" href="javascript:void(0)" onclick="saveSEO(this)">Сохранить</a>
-            </div>
+            {% if user.is_authenticated %}
+                <div>
+                    <label for="page_title">TITLE страницы</label>
+                    <input class="seo_input" id="page_title" value="{{ title }}">
+                    <label for="page_description">DESCRIPTION страницы</label>
+                    <input class="seo_input" id="page_description" value="{{ description }}">
+                    <label for="page_keywords">KEYWORDS страницы</label>
+                    <input class="seo_input" id="page_keywords" value="{{ keywords }}">
+                    <input type="hidden" id="page_target" value="about">
+                     <input type="hidden" id="page_type" value="static">
+                    <a  class="btn seo-btn" data-target="" href="javascript:void(0)" onclick="saveSEO(this)">Сохранить</a>
+                </div>
 
-         {% endif %}
+            {% endif %}
 
             {% if user.is_authenticated %}
                 <h1 class="mb30 admin-edit" onclick="editHeader(this,'about_header_section1')">{{ header_section1 }}</h1>
@@ -55,7 +56,7 @@
                 {% if user.is_authenticated %}
                     <div class="admin-edit" onclick="editInfo(this,'about_text2_section1')">{{ text2_section1 | safe }}</div>
                 {% else %}
-                     <div>{{ text2_section1 | safe }}</div>
+                    <div>{{ text2_section1 | safe }}</div>
                 {% endif %}
 
 
@@ -65,30 +66,45 @@
     </section>
     <section class="our-clients">
         <div class="container">
-          {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
                 <h3 class="mb30 admin-edit" onclick="editHeader(this,'about_header_section2')">{{ header_section2 }}</h3>
                 <div id="about_header_section2" class="edit-info-input">
                     <input id="about_header_section2_input" style=" padding: 10px" value="{{ header_section2 }}">
                     <a class="btn" id="about_header_section2_btn" data-target="" href="javascript:void(0)" onclick="saveHeader(this)">Сохранить</a>
                 </div>
+                 <input  id="new_img_clients" data-target="clients" type="file" onchange="addImg(this)"  class="edit-info-file">
+                <label style="background: #f66059;
+                                        padding: 10px;
+                                        display: inline-block;
+                                        margin-bottom: 20px;
+                                        border-radius: 21px;
+                                        color: #fff;" for="new_img_clients"  >
+                    Добавить изображение в блок
+                </label>
 
             {% else %}
                 <h3 class="mb30">{{ header_section2 }}</h3>
             {% endif %}
 
-        {% if user.is_authenticated %}
-                    <div class="admin-edit" onclick="editInfo(this,'about_text1_section2')"> {{ text1_section2 |safe }}</div>
-                {% else %}
-                    {{ text1_section2 |safe }}
-                {% endif %}
+            {% if user.is_authenticated %}
+                <div class="admin-edit" onclick="editInfo(this,'about_text1_section2')"> {{ text1_section2 |safe }}</div>
+            {% else %}
+                {{ text1_section2 |safe }}
+            {% endif %}
 
             <div class="clients">
                 {% for client in clients %}
-                    <div class="client ">
-                        <input id="client_{{client.id}}" data-target="client" data-id="{{client.id}}" type="file" onchange="changeImg(this)"  class="edit-info-file">
-                        <label for="client_{{client.id}}"  >
-                        <img id="client_img_{{ client.id }}"  src="{{ client.image.url }}" alt=""></label>
-                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="client ">
+                            <input id="client_{{client.id}}" data-target="client" data-id="{{client.id}}" type="file" onchange="changeImg(this)"  class="edit-info-file">
+                            <label for="client_{{client.id}}"  >
+                                <img id="client_img_{{ client.id }}"  src="{{ client.image.url }}" alt=""></label>
+                          <a class="del-img-button" data-target="clients" data-id="{{client.id}}" href="javascript:void(0)" onclick="delImg(this)">удалить</a>
+                        </div>
+
+                    {% else %}
+                        <img  src="{{ client.image.url }}" alt="">
+                    {% endif %}
                 {% endfor %}
 
             </div>
@@ -97,25 +113,41 @@
     </section>
     <section class="manufacture">
         <div class="container">
-          {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
                 <h3 class="mb30 admin-edit" onclick="editHeader(this,'about_header_section3')">{{ header_section3 }}</h3>
                 <div id="about_header_section3" class="edit-info-input">
                     <input id="about_header_section3_input" style=" padding: 10px" value="{{ header_section3 }}">
                     <a class="btn" id="about_header_section3_btn" data-target="" href="javascript:void(0)" onclick="saveHeader(this)">Сохранить</a>
                 </div>
+                <input  id="new_img" data-target="work" type="file" onchange="addImg(this)"  class="edit-info-file">
+                <label style="background: #f66059;
+                                        padding: 10px;
+                                        display: inline-block;
+                                        margin-bottom: 20px;
+                                        border-radius: 21px;
+                                        color: #fff;" for="new_img"  >
+                    Добавить изображение в блок
+                </label>
+
 
             {% else %}
-                     <h3 class="mb50">{{ header_section3 }}</h3>
+                <h3 class="mb50">{{ header_section3 }}</h3>
             {% endif %}
 
             <div class="manufacture-items">
                 {% for work in works %}
-                    <div>
-                        <input id="work_{{work.id}}" data-target="work" data-id="{{work.id}}" type="file" onchange="changeImg(this)"  class="edit-info-file">
-                        <label for="work_{{work.id}}"  >
-                        <img id="work_img_{{ work.id }}"  src="{{ work.image.url }}" alt=""></label>
+                    {% if user.is_authenticated %}
+                        <div  {% if forloop.last %} id="last_work_img"{% endif %}>
 
-                    </div>
+                            <input id="work_{{work.id}}" data-target="work" data-id="{{work.id}}" type="file" onchange="changeImg(this)"  class="edit-info-file">
+                            <label for="work_{{work.id}}"  >
+                                <img id="work_img_{{ work.id }}"  src="{{ work.image.url }}" alt=""></label>
+                        <a class="del-img-button" data-target="work" data-id="{{work.id}}" href="javascript:void(0)" onclick="delImg(this)">удалить</a>
+                        </div>
+
+                    {% else %}
+                        <img   src="{{ work.image.url }}" alt="">
+                    {% endif %}
                 {% endfor %}
 
 
@@ -126,11 +158,53 @@
     {% include 'order_form.html' %}
 
 
- {% if user.is_authenticated %}
-       {% include 'editmodal.html' %}
+    {% if user.is_authenticated %}
+        {% include 'editmodal.html' %}
     {% endif %}
 
+<script>
 
+function addImg(el) {
+    let file = el.files[0]
+    let target = el.dataset.target
+    let new_img = ''
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        new_img =  e.target.result
+    }
+    reader.readAsDataURL(el.files[0]);
+
+    let fd = new FormData();
+    fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+    fd.append('image',file)
+    fd.append('target',target)
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/addImg/', true);
+    xhr.onload = function () {
+        console.log(JSON.parse(this.response));
+        document.location.reload(true);
+    };
+    xhr.send(fd);
+
+}
+
+function delImg(el) {
+    let target = el.dataset.target
+    let id = el.dataset.id
+    let fd = new FormData();
+    fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+    fd.append('id',id)
+    fd.append('target',target)
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/delImg/', true);
+    xhr.onload = function () {
+        console.log(JSON.parse(this.response));
+        document.location.reload(true);
+    };
+    xhr.send(fd);
+
+}
+</script>
 
 
 {% endblock %}

@@ -201,28 +201,49 @@ def saveSEO(request):
     title = request.POST.get('title')
     description = request.POST.get('description')
     keywords = request.POST.get('keywords')
-    if target == 'about':
-        page = Page.objects.get(id=1)
-        page.about_title = title
-        page.about_description = description
-        page.about_keywords = keywords
-        page.save(force_update=True)
-        return_dict['result'] = 'success'
-    elif target == 'contacts':
-        page = Page.objects.get(id=1)
-        page.contact_title = title
-        page.contact_description = description
-        page.contact_keywords = keywords
-        page.save(force_update=True)
-        return_dict['result'] = 'success'
-    elif target == 'service':
-        page = Page.objects.get(id=1)
-        page.services_item_title = title
-        page.services_item_description = description
-        page.services_item_keywords = keywords
-        page.save(force_update=True)
+    page_type = request.POST.get('page_type')
+    if page_type == 'static':
+        if target == 'about':
+            page = Page.objects.get(id=1)
+            page.about_title = title
+            page.about_description = description
+            page.about_keywords = keywords
+            page.save(force_update=True)
+            return_dict['result'] = 'success'
+        elif target == 'contacts':
+            page = Page.objects.get(id=1)
+            page.contact_title = title
+            page.contact_description = description
+            page.contact_keywords = keywords
+            page.save(force_update=True)
+            return_dict['result'] = 'success'
+        elif target == 'service':
+            page = Page.objects.get(id=1)
+            page.services_item_title = title
+            page.services_item_description = description
+            page.services_item_keywords = keywords
+            page.save(force_update=True)
+        elif target == 'portfolio':
+            page = Page.objects.get(id=1)
+            page.category_main_title = title
+            page.category_main_description = description
+            page.category_main_keywords = keywords
+            page.save(force_update=True)
+        elif target == 'index':
+            page = Page.objects.get(id=1)
+            page.index_title = title
+            page.index_description = description
+            page.index_keywords = keywords
+            page.save(force_update=True)
 
-        return_dict['result'] = 'success'
+            return_dict['result'] = 'success'
+    elif page_type == 'category':
+        id = int(request.POST.get('target'))
+        category = Category.objects.get(id=id)
+        category.title = title
+        category.description = description
+        category.keywords = keywords
+        category.save(force_update=True)
 
     return JsonResponse(return_dict)
 
@@ -273,6 +294,70 @@ def saveServiceInfo(request):
         service_new = Services.objects.create(header=header, text=text)
         service_new.save()
         return_dict['id'] = str(service_new.id)
+    return JsonResponse(return_dict)
+
+def deleteService(request):
+    return_dict = {}
+    print(request.POST)
+    id = int(request.POST.get('id'))
+    service = Services.objects.get(id=id)
+    service.delete()
+    return JsonResponse(return_dict)
 
 
+def addImg(request):
+    return_dict = {}
+    print(request.POST)
+    target = request.POST.get('target')
+    form = AboutWorkForm(request.POST, request.FILES)
+    if target == 'work':
+        form = AboutWorkForm(request.POST, request.FILES)
+    elif target == 'clients':
+        form = AboutClientsForm(request.POST, request.FILES)
+    else:
+        pass
+    if form.is_valid():
+        form.save()
+
+    return_dict['result'] = 'success'
+    return JsonResponse(return_dict)
+
+def delImg(request):
+    return_dict = {}
+    print(request.POST)
+    target = request.POST.get('target')
+    id = int(request.POST.get('id'))
+
+    if target == 'work':
+        img = AboutPageWork.objects.get(id=id)
+        img.delete()
+    elif target == 'clients':
+        img = AboutPageClients.objects.get(id=id)
+        img.delete()
+    else:
+        pass
+    return_dict['result'] = 'success'
+    return JsonResponse(return_dict)
+
+def create_update_category(request):
+    return_dict = {}
+    print(request.POST)
+    action_type = request.POST.get('action_type')
+
+    if action_type == 'new':
+        form = CategoryCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+    elif action_type == 'update':
+        id = int(request.POST.get('id'))
+        cat = Category.objects.get(id=id)
+        image = request.POST.get('image')
+        form = CategoryUpdateForm(request.POST, request.FILES, instance=cat)
+        if form.is_valid():
+            form.save()
+    elif action_type == 'delete':
+        id = int(request.POST.get('id'))
+        cat = Category.objects.get(id=id)
+        cat.delete()
+    return_dict['result'] = 'success'
     return JsonResponse(return_dict)

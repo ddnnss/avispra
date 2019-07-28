@@ -16,12 +16,15 @@
   <source src="https://idg.net.ua/blog/wp-content/uploads/daisy-stock-h264-video.mp4" type="video/mp4">
 
 </video>
+
 <div class="content">
+
     <div class="inner">
         <div class="logo-index">
             <p>Avispa</p>
             <span>швейная фабрика в СПб</span>
         </div>
+
     <nav>
          <ul>
                 <li><a href="{% url 'about' %}">о нас</a></li>
@@ -31,8 +34,27 @@
             </ul>
     </nav>
     </div>
+     {% if user.is_authenticated %}
+         {% csrf_token %}
+                <div style="background: white; padding: 10px">
+                    <label for="page_title">TITLE страницы</label>
+                    <input class="seo_input" id="page_title" value="{{ title }}">
+                    <label for="page_description">DESCRIPTION страницы</label>
+                    <input class="seo_input" id="page_description" value="{{ description }}">
+                    <label for="page_keywords">KEYWORDS страницы</label>
+                    <input class="seo_input" id="page_keywords" value="{{ keywords }}">
+                    <input type="hidden" id="page_target" value="index">
+                    <input type="hidden" id="page_type" value="static">
+                    <a  class="btn seo-btn" data-target="" href="javascript:void(0)" onclick="saveSEO(this)">Сохранить</a>
+                </div>
+
+            {% endif %}
 
 
 </div>
+{% if user.is_authenticated %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" type="text/javascript"></script>
+<script src="{% static 'js/admin.js' %}"></script>
+{% endif %}
 </body>
 </html>

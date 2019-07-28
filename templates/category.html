@@ -11,6 +11,20 @@
                     <li>{{ category.name }}</li>
                 </ul>
             </div>
+        {% if user.is_authenticated %}
+                <div>
+                    <label for="page_title">TITLE страницы</label>
+                    <input class="seo_input" id="page_title" value="{{ title }}">
+                    <label for="page_description">DESCRIPTION страницы</label>
+                    <input class="seo_input" id="page_description" value="{{ description }}">
+                    <label for="page_keywords">KEYWORDS страницы</label>
+                    <input class="seo_input" id="page_keywords" value="{{ keywords }}">
+                    <input type="hidden" id="page_target" value="{{ category.id }}">
+                     <input type="hidden" id="page_type" value="category">
+                    <a  class="btn seo-btn" data-target="" href="javascript:void(0)" onclick="saveSEO(this)">Сохранить</a>
+                </div>
+
+            {% endif %}
             <h1 class="mb30">{{ category.name }}</h1>
             <div class="portfolio-items">
                 {% for item in items %}

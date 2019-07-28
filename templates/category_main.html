@@ -2,32 +2,208 @@
 {% load static %}
 
 {% block content %}
-<section class="portfolio-main">
-    <div class="container">
-        <div class="breadcrumbs mb30">
-            <ul>
-                <li><a href="#">Главная</a></li>
-                <li>Портфолию</li>
+    <section class="portfolio-main">
+        <div class="container">
+            <div class="breadcrumbs mb30">
+                <ul>
+                    <li><a href="#">Главная</a></li>
+                    <li>Портфолию</li>
 
-            </ul>
-        </div>
-        <h1 class="mb30">Портфолию</h1>
-        <div class="portfolio-items">
-            {% for category in categories %}
-            <div class="portfolio-main-item">
-            <a href="{% url 'portfolio_cat' category.name_slug %}">  <img src="{{ category.image.url }}" alt=""></a>
-                <h5><a href="{% url 'portfolio_cat' category.name_slug %}">  {{ category.name }}</a></h5>
+                </ul>
             </div>
-           {% endfor %}
+            {% if user.is_authenticated %}
+                <div>
+                    <label for="page_title">TITLE страницы</label>
+                    <input class="seo_input" id="page_title" value="{{ title }}">
+                    <label for="page_description">DESCRIPTION страницы</label>
+                    <input class="seo_input" id="page_description" value="{{ description }}">
+                    <label for="page_keywords">KEYWORDS страницы</label>
+                    <input class="seo_input" id="page_keywords" value="{{ keywords }}">
+                    <input type="hidden" id="page_target" value="portfolio">
+                    <input type="hidden" id="page_type" value="static">
+                    <a  class="btn seo-btn" data-target="" href="javascript:void(0)" onclick="saveSEO(this)">Сохранить</a>
+                </div>
+
+            {% endif %}
+            <h1 class="mb30">Портфолию</h1>
+            <a style="display: inline-block; margin-bottom: 20px" class="btn" id=""  data-type="new" href="javascript:void(0)" onclick="newCategory(this)">Новая категория</a>
+            <div class="portfolio-items">
+                {% for category in categories %}
+                    {% if user.is_authenticated %}
+                    <div class="portfolio-main-item admin-edit">
+                        <a href="{% url 'portfolio_cat' category.name_slug %}">  <img src="{{ category.image.url }}" alt=""></a>
+                        <h5><a href="{% url 'portfolio_cat' category.name_slug %}">  {{ category.name }}</a></h5>
+                        <a style="display: inline-block; margin-bottom: 20px" class="btn" data-id="{{ category.id }}"
+                           data-title="{{ category.title }}"
+                           data-description="{{ category.description }}"
+                           data-keywords="{{ category.keywords }}"
+                           data-name="{{ category.name }}"
+                           data-image="{{ category.image.url }}"
+
+                           data-type="update" href="javascript:void(0)" onclick="newCategory(this)">Редактировать</a>
+
+                    </div>
+                {% else %}
+                        <div class="portfolio-main-item ">
+                        <a href="{% url 'portfolio_cat' category.name_slug %}">  <img src="{{ category.image.url }}" alt=""></a>
+                        <h5><a href="{% url 'portfolio_cat' category.name_slug %}">  {{ category.name }}</a></h5>
+
+                    </div>
+                {% endif %}
+                {% endfor %}
+
+            </div>
+
 
         </div>
 
 
-    </div>
 
-</section>
+    </section>
+
+    {% if user.is_authenticated %}
+        <div style="display: none" id="ModalCategory" class="editModal">{% csrf_token %}
+            <div style="padding: 10px; text-align: left" id="modal-content" class="editmodal-content">
+                <label for="cat_name">Название</label>
+                <input style="margin-bottom: 20px"  id="cat_name" >
+                <label id="img_label" for="cat_image">Изображение</label>
+                <input  style="margin-bottom: 20px"  id="cat_image" type="file">
+                <div style="display: none;" id="cur_image_div">
+                    <p>Текущее изображение</p>
+                    <img width="200" id="cur_image" src="">
+                </div>
+
+                <label for="cat_title">Title станицы</label>
+                <input  style="margin-bottom: 20px"  id="cat_title" >
+                <label for="cat_description">Description станицы</label>
+                <input  style="margin-bottom: 20px"   id="cat_description" >
+                <label for="cat_keywords">Keywords станицы</label>
+                <input style="margin-bottom: 20px"   id="cat_keywords" >
+
+                <div style="margin: 20px">
+                    <a style="background: #69bf69" class="btn"  id="saveCategory" data-id="" data-type="" href="javascript:void(0)" onclick="saveCategory(this)">сохранить</a>
+
+                    <a style="background: #878c8a" class="btn" href="javascript:void(0)" onclick="closeEditModalService()">отмена</a>
+                     <a style="background: red;margin-left: 100px;" class="btn"  id="deleteCategory" data-id="" href="javascript:void(0)" onclick=" deleteCategory(this)" >удалить</a>
+                    <span style="display: block;
+                            margin-top: 20px;
+                            color: red;
+                            font-weight: 600;
+                            text-align: center;" id="del_info">При удалении категории, все товары связанные с ней, не будут отображаться</span>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <script>
+
+            var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].defaultValue
+            let editmodal = document.getElementById('ModalCategory');
+
+            function newCategory(el) {
+
+                let action_type= el.dataset.type
+                console.log(action_type)
+
+                if (action_type === 'new'){
+                    $('#saveCategory').html('Создать категорию')
+                    $('#saveCategory').attr('data-type','new')
+                    $('#img_label').html('Выберите изображение')
+                    $('#deleteCategory').css('display','none')
+                    $('#del_info').css('display','none')
+                    $('#cur_image_div').css('display','none')
+                    $('#cat_name').val('')
+                    $('#cat_title').val('')
+                    $('#cat_description').val('')
+                    $('#cat_keywords').val('')
+                    editmodal.style.display = "block";
+
+                }
+
+                if (action_type === 'update'){
+
+                    console.log(el.dataset.id)
+                    $('#saveCategory').html('Обновить категорию')
+                    $('#saveCategory').attr('data-type','update')
+                    $('#saveCategory').attr('data-id',el.dataset.id)
+                    $('#deleteCategory').attr('data-id',el.dataset.id)
+                    $('#deleteCategory').css('display','inline-block')
+                    $('#cur_image_div').css('display','block')
+                    $('#img_label').html('Выберите новое изображение (Если не выбрано, то остается текущее)')
+                    $('#del_info').css('display','block')
+                    $('#cur_image').attr('src',el.dataset.image)
+                    $('#cat_name').val(el.dataset.name)
+                    $('#cat_title').val(el.dataset.title)
+                    $('#cat_description').val(el.dataset.description)
+                    $('#cat_keywords').val(el.dataset.keywords)
 
 
+
+                    editmodal.style.display = "block";
+
+                }
+
+
+            }
+
+            function saveCategory(el) {
+                let action_type = el.dataset.type
+                let id = el.dataset.id
+                let name = $('#cat_name').val()
+                let title = $('#cat_title').val()
+                let description = $('#cat_description').val()
+                let keywords = $('#cat_keywords').val()
+
+                let file = document.getElementById('cat_image').files[0]
+
+
+                let fd = new FormData();
+                fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+                fd.append('id',id)
+                fd.append('action_type',action_type)
+                fd.append('image',file)
+                fd.append('name',name)
+                fd.append('title',title)
+                fd.append('description',description)
+                fd.append('keywords',keywords)
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/create_update_category/', true);
+                xhr.onload = function () {
+                    console.log(JSON.parse(this.response));
+                    document.location.reload(true);
+
+                };
+                xhr.send(fd);
+
+            }
+
+            function deleteCategory(el) {
+                let id = el.dataset.id
+                let fd = new FormData();
+                fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+                fd.append('id',id)
+                fd.append('action_type','delete')
+
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/create_update_category/', true);
+                xhr.onload = function () {
+                    console.log(JSON.parse(this.response));
+                    document.location.reload(true);
+
+                };
+                xhr.send(fd);
+
+            }
+
+
+            function closeEditModalService() {
+                editmodal.style.display = "none";
+            }
+        </script>
+
+
+    {% endif %}
 {% endblock %}
 
 {% block js %}
