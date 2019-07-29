@@ -52,3 +52,22 @@ class CategoryUpdateForm(ModelForm):
             'title',
             'description',
             'keywords',)
+
+class CreateItemForm(ModelForm):
+    class Meta:
+        model = Item
+        fields = ('category',
+                  'name',
+                  'item_description',
+                  'min_order',
+                  'min_price',
+                  'max_price',
+                  'title',
+                  'description',
+                  'keywords',)
+
+class UpdateItemImageForm(ModelForm):
+    class Meta:
+        model = ItemImage
+        fields = ('image',)
+

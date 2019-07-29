@@ -361,3 +361,72 @@ def create_update_category(request):
         cat.delete()
     return_dict['result'] = 'success'
     return JsonResponse(return_dict)
+
+
+def createItem(request):
+    return_dict = {}
+    print(request.POST)
+    new_image=0
+    for f in request.FILES.getlist('image'):
+        print(f)
+    form = CreateItemForm(request.POST)
+    if form.is_valid():
+        new_image = form.save()
+        print(new_image.id)
+    for f in request.FILES.getlist('image'):
+        ItemImage.objects.create(item_id=new_image.id,image=f).save()
+    return_dict['result'] = 'success'
+    return JsonResponse(return_dict)
+
+
+def changeItemImg(request):
+
+    return_dict = {}
+    print(request.POST)
+    target = request.POST.get('target')
+    id = int(request.POST.get('id'))
+    file = request.POST.get('file')
+    img = ItemImage.objects.get(id=id)
+    form = UpdateItemImageForm(request.POST, request.FILES, instance=img)
+    if form.is_valid():
+        form.save()
+
+    return_dict['result'] = 'success'
+
+
+    return JsonResponse(return_dict)
+
+
+def updateItem(request):
+    return_dict = {}
+    print(request.POST)
+    id = int(request.POST.get('id'))
+    item = Item.objects.get(id=id)
+    form = CreateItemForm(request.POST, instance=item)
+    if form.is_valid():
+        form.save()
+
+    return_dict['result'] = 'success'
+    return JsonResponse(return_dict)
+
+
+
+def deleteItem(request):
+    return_dict = {}
+    print(request.POST)
+    id = int(request.POST.get('id'))
+    item = Item.objects.get(id=id)
+    item.delete()
+
+    return_dict['result'] = 'success'
+    return JsonResponse(return_dict)
+
+def deleteItemImg(request):
+    return_dict = {}
+    print(request.POST)
+    id = int(request.POST.get('id'))
+    item = ItemImage.objects.get(id=id)
+    item.delete()
+
+    return_dict['result'] = 'success'
+    return JsonResponse(return_dict)

@@ -11,23 +11,10 @@
                     <li>{{ category.name }}</li>
                 </ul>
             </div>
-            {% if user.is_authenticated %}
-                <div>
-                    <label for="page_title">TITLE страницы</label>
-                    <input class="seo_input" id="page_title" value="{{ title }}">
-                    <label for="page_description">DESCRIPTION страницы</label>
-                    <input class="seo_input" id="page_description" value="{{ description }}">
-                    <label for="page_keywords">KEYWORDS страницы</label>
-                    <input class="seo_input" id="page_keywords" value="{{ keywords }}">
-                    <input type="hidden" id="page_target" value="{{ category.id }}">
-                    <input type="hidden" id="page_type" value="category">
-                    <a  class="btn seo-btn" data-target="" href="javascript:void(0)" onclick="saveSEO(this)">Сохранить</a>
-                </div>
 
-            {% endif %}
             <h1 class="mb30">{{ category.name }}</h1>
             {% if user.is_authenticated %}
-                <a style="display: inline-block; margin-bottom: 20px" class="btn" id="" data-cat_id="{{ category.id }}"  data-type="new" href="javascript:void(0)" onclick="newItem(this)">Добавить новый товар в эту категорию</a>
+                <a style="display: inline-block; margin-bottom: 20px" class="btn" id=""   data-type="new" href="javascript:void(0)" onclick="newItem(this)">Добавить новый товар в эту категорию</a>
             {% endif %}
             <div class="portfolio-items">
                 {% for item in items %}
@@ -40,6 +27,21 @@
                         {% else %}
                             <p>Цена пошива: {{ item.max_price }} руб</p>
                         {% endif %}
+                        {% for img in item.itemimage_set.all %}
+                            <span style="display: none" id="iimg{{ img.id }}" data-img_id="{{ img.id }}">{{ img.image.url }}</span>
+
+                        {% endfor %}
+                        <a style="display: inline-block; margin-top: 20px" class="btn" data-item_id="{{ item.id }}"
+                           data-title="{{ item.title }}"
+                           data-description="{{ item.description }}"
+                           data-keywords="{{ item.keywords }}"
+                           data-name="{{ item.name }}"
+                           data-min_order="{{ item.min_order }}"
+                           data-min_price="{{ item.min_price }}"
+                           data-max_price="{{ item.max_price }}"
+                           data-item_description="{{ item.item_description  }}"
+
+                           href="javascript:void(0)" onclick="editItem(this)">Редактировать</a>
                     </div>
                 {% endfor %}
 
@@ -52,29 +54,30 @@
     </section>
 
     {% if user.is_authenticated %}
-        <div style="display: none; overflow: auto" id="ModalItem" class="editModal">{% csrf_token %}
+        <div style="display: none; overflow: scroll; padding-top: 0" id="ModalItem" class="editModal">{% csrf_token %}
             <div style="padding: 10px; text-align: left" id="modal-content" class="editmodal-content">
                 <label for="item_name">Название <sup>*</sup></label>
-                <input style="margin-bottom: 20px"  id="item_name" >
-                <label for="item_description">Описание товара</label>
-                <textarea style="margin-bottom: 20px"  id="item_description" ></textarea>
-                <label for="item_name">Минимальный заказ</label>
-                <input style="margin-bottom: 20px"  id="item_name" >
-                <label for="item_name">Минимальная цена (если не указано, то не отображается)</label>
-                <input style="margin-bottom: 20px"  id="item_name" >
-                <label for="item_name">Максимальная цена <sup>*</sup></label>
-                <input style="margin-bottom: 20px"  id="item_name" >
+                <input style="margin-bottom: 20px"  id="item_name" required>
+                <label for="editor">Описание товара</label>
+                <textarea style="margin-bottom: 20px"  id="editor" ></textarea>
+                <label for="item_min_order">Минимальный заказ</label>
+                <input style="margin-bottom: 20px"  id="item_min_order" type="number" >
+                <label for="item_min_price">Минимальная цена (если не указано, то не отображается)</label>
+                <input style="margin-bottom: 20px"  id="item_min_price" type="number" >
+                <label for="item_max_price">Максимальная цена <sup>*</sup></label>
+                <input style="margin-bottom: 20px"  id="item_max_price" required type="number" >
 
                 <label for="item_page_title">Title станицы</label>
-                <input  style="margin-bottom: 20px"  id="item_title" >
+                <input  style="margin-bottom: 20px"  id="item_page_title" >
                 <label for="item_page_description">Description станицы</label>
-                <input  style="margin-bottom: 20px"   id="item_description" >
+                <input  style="margin-bottom: 20px"   id="item_page_description" >
                 <label for="item_page_keywords">Keywords станицы</label>
-                <input style="margin-bottom: 20px"   id="item_keywords" >
-                <input  id="new_img" data-target="work" type="file" onchange="addImg(this)"  class="edit-info-file" multiple>
-                <label style="background: #f66059;
+                <input style="margin-bottom: 20px"   id="item_page_keywords" >
+                <input  id="new_img" data-target="work" type="file" onchange="addItemImg(this)"  class="edit-info-file" multiple>
+                <label id="label_img" style="background: #f66059;
                                             padding: 10px;
-                                            display: inline-block;
+                                                display: block;
+                                            width: fit-content;
                                             margin-bottom: 20px;
                                             border-radius: 21px;
                                             font-size: 13px;
@@ -82,13 +85,26 @@
                     Добавить изображения для товара (необходимо выбрать сразу все нужные изображения)
                 </label>
 
-                <div id="item_images">
-                <img src="">
+                 <input  id="new_item_img"  type="file" data-id="" onchange="addNewItemImg(this)"  class="edit-info-file" >
+                <label id="label_new_img" style="background: #f66059;
+                                            padding: 10px;
+                                                display: block;
+                                                width: fit-content;
+                                            margin-bottom: 20px;
+                                            border-radius: 21px;
+                                            font-size: 13px;
+                                            color: #fff;" for="new_item_img"  >
+                    Добавить изображениe для товара
+                </label>
+
+                <div  style="display: flex; justify-content: space-between;" id="item_images">
+
+
 
                 </div>
 
                 <div style="margin: 20px">
-                    <a style="background: #69bf69" class="btn"  id="saveItem" data-id="" data-type="" href="javascript:void(0)" onclick="saveItem(this)">сохранить</a>
+                    <a style="background: #69bf69" class="btn"  id="saveItem" data-cat_id="{{ category.id }}" data-item_id="" data-type="" href="javascript:void(0)" onclick="saveItem(this)">сохранить</a>
 
                     <a style="background: #878c8a" class="btn" href="javascript:void(0)" onclick="closeEditModalService()">отмена</a>
                     <a style="background: red;margin-left: 100px;" class="btn"  id="deleteItem" data-id="" href="javascript:void(0)" onclick=" deleteItem(this)" >удалить</a>
@@ -111,33 +127,299 @@
             let editmodal = document.getElementById('ModalItem');
 
             function newItem(el) {
+                $('#deleteItem').css('display','none')
+                $('#del_info').css('display','none')
+                $('#label_img').css('display','block')
+                $('#label_new_img').css('display','none')
+               // $('#item_images').html('')
+                $('#item_name').val('')
+                $('#editor').html('')
+                $('#item_min_order').val('')
+                $('#item_min_price').val('')
+                $('#item_max_price').val('')
+
+
+                $('#item_page_title').val('')
+                $('#item_page_description').val('')
+                $('#item_page_keywords').val('')
+                $('#saveItem').html('Создать товар')
+                $('#saveItem').attr('onclick','saveItem(this)')
                 editmodal.style.display = "block";
-                CKEDITOR.replace( 'item_description' );
+                CKEDITOR.replace( 'editor' );
+                CKEDITOR.instances.editor.setData('')
             }
 
-            function addImg(el) {
-                let file = el.files
-                let target = el.dataset.target
-                let new_img = ''
+            function editItem(el) {
+                let item_id = el.dataset.item_id
+               // $('#item_images').html('')
+                $('#deleteItem').attr('data-id',item_id)
+                $('#new_item_img').attr('data-id',item_id)
+                $('#item_name').val(el.dataset.name)
+                $('#editor').html(el.dataset.item_description)
+                $('#item_min_order').val(el.dataset.min_order)
+                $('#item_min_price').val(el.dataset.min_price)
+                $('#item_max_price').val(el.dataset.max_price)
+
+
+                $('#item_page_title').val(el.dataset.title)
+                $('#item_page_description').val(el.dataset.description)
+                $('#item_page_keywords').val(el.dataset.keywords)
+                $('#deleteItem').css('display','inline-block')
+                $('#del_info').css('display','block')
+                $('#label_img').css('display','none')
+                $('#label_new_img').css('display','block')
+                $('#saveItem').html('Обновить товар')
+                $('#saveItem').attr('onclick','updateItem(this)')
+                $('#saveItem').attr('data-item_id',item_id)
+                CKEDITOR.replace( 'editor' );
+
+                $( "span[id^='iimg']" ).each(function() {
+                    console.log ('ff');
+                    $('#item_images').append("<div id='previewImgDiv" + $( this ).attr("data-img_id") + "'>" +
+                        "<input id='itemimage_" + $( this ).attr("data-img_id") + "'  data-id=" + $( this ).attr("data-img_id") + " type='file' onchange='editItemImage(this)'  class='edit-info-file'>\n" +
+                        "                    <label for='itemimage_" + $( this ).attr("data-img_id") + "'  >\n" +
+                        "                        <img class='previewImg' id='previewImg" + $( this ).attr("data-img_id") + "'  src="+ $( this ).html() +">\n" +
+                        "                    </label>" +
+                        "<a href='javascript:void(0)' class='small-delete' data-id="+ $( this ).attr("data-img_id") +" onclick='deleteItemImage(this)'>удалить</a>" +
+                        "</div>"
+                    )
+                });
+
+
+
+
+
+                editmodal.style.display = "block";
+            }
+
+            function editItemImage(el) {
+                console.log(el.dataset.id)
+                let img_id = el.dataset.id
+                let file = el.files[0]
                 let reader = new FileReader();
                 reader.onload = function(e) {
-                    $('#item_images').append("<img src="+' e.target.result '+">")
-                   console.log(e.target.result)
+                    $('#previewImg'+ img_id).attr('src', e.target.result);
+                }
+                reader.readAsDataURL(el.files[0]);
+
+
+                let fd = new FormData();
+                fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+                fd.append('id',img_id)
+                fd.append('image',file)
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/changeItemImg/', true);
+                xhr.onload = function () {
+                    console.log(JSON.parse(this.response));
+
+                };
+                xhr.send(fd);
+
+            }
+
+            function addNewItemImg(el) {
+                let item_id = el.dataset.id
+                let file = el.files[0]
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                     $('#item_images').append("<div >\n" +
+                         "                   <img class='previewImg'  src=" + e.target.result + ">\n" +
+                         "</div>"
+                    )
+
+                }
+                reader.readAsDataURL(el.files[0]);
+
+                return
+                let fd = new FormData();
+                fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+                fd.append('id',img_id)
+                fd.append('image',file)
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/changeItemImg/', true);
+                xhr.onload = function () {
+                    console.log(JSON.parse(this.response));
+
+                };
+                xhr.send(fd);
+            }
+
+            function addItemImg(el) {
+                var preview = document.querySelector('#item_images');
+                if (el.files) {
+                    [].forEach.call(el.files, readAndPreview);
+                }
+                function readAndPreview(file) {
+                    // Make sure `file.name` matches our extensions criteria
+                    if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                        return alert(file.name + " is not an image");
+                    } // else...
+
+                    var reader = new FileReader();
+
+                    reader.addEventListener("load", function() {
+                        var image = new Image();
+                        image.width = 200;
+                        image.title  = file.name;
+                        image.src    = this.result;
+                        image.classList.add('previewImg')
+                        preview.appendChild(image);
+                    });
+
+                    reader.readAsDataURL(file);
+
                 }
 
-                for (var i in el.files){
-                 reader.readAsDataURL(el.files[i]);
-                }
+            }
+            function saveItem(el) {
+
+                let cat_id = el.dataset.cat_id
+                let name = $('#item_name').val()
+                let description = CKEDITOR.instances.editor.getData()
+                let min_order = $('#item_min_order').val()
+                let min_price = $('#item_min_price').val()
+                let max_price = $('#item_max_price').val()
 
 
+                let page_title = $('#item_page_title').val()
+                let page_description = $('#item_page_description').val()
+                let page_keywords = $('#item_page_keywords').val()
+                var data = new FormData();
+                jQuery.each(jQuery('#new_img')[0].files, function(i, file) {
+                    data.append('image', file);
+
+                })
+                data.append('csrfmiddlewaretoken', csrfmiddlewaretoken)
+                data.append('category', cat_id)
+                data.append('name', name)
+                data.append('item_description', description)
+                data.append('min_order', min_order)
+                data.append('min_price', min_price)
+                data.append('max_price', max_price)
+                data.append('title', page_title)
+                data.append('description', page_description)
+                data.append('keywords', page_keywords)
+
+                console.log(data)
 
 
+                $.ajax({
+                    url: "/createItem/",
+                    type: "POST",
+                    method: 'POST',
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(msg) {
+                        editmodal.style.display = "none";
+                        document.location.reload(true);
+                    },
+                    error: function(msg) {
+
+                    }
+                });
+            }
+
+            function deleteItem(el) {
+                 let id = el.dataset.id
+                 var data = new FormData();
+                 data.append('csrfmiddlewaretoken', csrfmiddlewaretoken)
+                  data.append('id', id)
+                  $.ajax({
+                    url: "/deleteItem/",
+                    type: "POST",
+                    method: 'POST',
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(msg) {
+                        editmodal.style.display = "none";
+                        document.location.reload(true);
+                    },
+                    error: function(msg) {
+
+                    }
+                });
+
+            }
+
+            function deleteItemImage(el) {
+                let id = el.dataset.id
+                 var data = new FormData();
+                 data.append('csrfmiddlewaretoken', csrfmiddlewaretoken)
+                  data.append('id', id)
+                  $.ajax({
+                    url: "/deleteItemImg/",
+                    type: "POST",
+                    method: 'POST',
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(msg) {
+
+                       $('#previewImgDiv'+id).remove();
+                    },
+                    error: function(msg) {
+
+                    }
+                });
+            }
+
+            function updateItem(el) {
+                let cat_id = el.dataset.cat_id
+
+                let item_id = el.dataset.item_id
+                let name = $('#item_name').val()
+                let description = CKEDITOR.instances.editor.getData()
+                let min_order = $('#item_min_order').val()
+                let min_price = $('#item_min_price').val()
+                let max_price = $('#item_max_price').val()
+
+
+                let page_title = $('#item_page_title').val()
+                let page_description = $('#item_page_description').val()
+                let page_keywords = $('#item_page_keywords').val()
+                var data = new FormData();
+
+                data.append('csrfmiddlewaretoken', csrfmiddlewaretoken)
+                data.append('id', item_id)
+                data.append('category', cat_id)
+                data.append('name', name)
+                data.append('item_description', description)
+                data.append('min_order', min_order)
+                data.append('min_price', min_price)
+                data.append('max_price', max_price)
+                data.append('title', page_title)
+                data.append('description', page_description)
+                data.append('keywords', page_keywords)
+
+                console.log(data)
+
+
+                $.ajax({
+                    url: "/updateItem/",
+                    type: "POST",
+                    method: 'POST',
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(msg) {
+                        editmodal.style.display = "none";
+                        document.location.reload(true);
+                    },
+                    error: function(msg) {
+
+                    }
+                });
             }
 
             function closeEditModalService() {
                 editmodal.style.display = "none";
             }
-
         </script>
     {% endif %}
 

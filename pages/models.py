@@ -157,7 +157,7 @@ class Item(models.Model):
 
 
 class ItemImage(models.Model):
-    item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.SET_NULL, verbose_name='Изображение для товара')
+    item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.CASCADE, verbose_name='Изображение для товара')
     image = models.ImageField('Изображение товара', upload_to='item_images', blank=False)
 
 
@@ -222,7 +222,39 @@ def auto_delete_file_on_change_work(sender, instance, **kwargs):
         if os.path.isfile(old_file.path):
             os.remove(old_file.path)
 
+def auto_delete_file_on_change_category(sender, instance, **kwargs):
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = Category.objects.get(pk=instance.pk).image
+    except AboutPageClients.DoesNotExist:
+        return False
+
+    new_file = instance.image
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)
+
+def auto_delete_file_on_change_itemimage(sender, instance, **kwargs):
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = ItemImage.objects.get(pk=instance.pk).image
+    except AboutPageClients.DoesNotExist:
+        return False
+
+    new_file = instance.image
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)
+
 post_delete.connect(auto_delete_file_on_delete, sender=AboutPageClients)
 post_delete.connect(auto_delete_file_on_delete, sender=AboutPageWork)
+post_delete.connect(auto_delete_file_on_delete, sender=ItemImage)
+post_delete.connect(auto_delete_file_on_delete, sender=Category)
+pre_save.connect(auto_delete_file_on_change_category, sender=Category)
 pre_save.connect(auto_delete_file_on_change_clients, sender=AboutPageClients)
 pre_save.connect(auto_delete_file_on_change_work, sender=AboutPageWork)
+pre_save.connect(auto_delete_file_on_change_itemimage, sender=ItemImage)

@@ -23,6 +23,12 @@ urlpatterns = [
     path('saveServiceInfo/', views.saveServiceInfo, name='saveServiceInfo'),
     path('deleteService/', views.deleteService, name='deleteService'),
     path('create_update_category/', views.create_update_category, name='create_update_category'),
+    path('createItem/', views.createItem, name='createItem'),
+    path('changeItemImg/', views.changeItemImg, name='changeItemImg'),
+    path('updateItem/', views.updateItem, name='updateItem'),
+    path('deleteItem/', views.deleteItem, name='deleteItem'),
+    path('deleteItemImg/', views.deleteItemImg, name='deleteItemImg'),
+
 
 
 
