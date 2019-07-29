@@ -145,10 +145,6 @@ class Item(models.Model):
         self.name_slug = slugify(self.name)
         super(Item, self).save(*args, **kwargs)
 
-
-
-
-
     def __str__(self):
         if self.category.name:
             return 'Товар {} в категория {}'.format(self.name, self.category.name)
