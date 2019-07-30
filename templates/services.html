@@ -79,25 +79,39 @@
             <textarea id="text"></textarea>
 
             <div style="margin: 20px">
+                 <input id="uploadImg"  type="file" onchange="uploadImg(this)"  class="edit-info-file">
+                <label style="background: #655d5d;
+                                        padding: 10px;
+                                        display: inline-block;
+                                        margin-bottom: 20px;
+                                        border-radius: 21px;
+                                        color: #fff;" for="uploadImg"  >
+                    Загрузить картинку
+                </label>
                 <a class="btn"  id="sendDataService" data-target="" href="javascript:void(0)" onclick="saveService()">сохранить</a>
                  <a class="btn"  id="deleteService" data-id="" href="javascript:void(0)" onclick="deleteService(this)">удалить</a>
                 <a class="btn" href="javascript:void(0)" onclick="closeEditModalService()">отмена</a>
+
+
             </div>
+            <p style="display: none" id="uploadSuccess">Картинка загружена. Используйте этот путь, что вставить картинку в текст: <strong><span id="imgUrl"></span></strong></p>
         </div>
     </div>
 
-
+   {% if user.is_authenticated %}
     <script>
         var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].defaultValue
         let editmodal = document.getElementById('editModalService');
 
         let id = ''
 
+
+
         function newService() {
             mode = 'new'
             $('#header').val('')
             $('#sendDataService').attr('onclick','newServiceSave()')
-
+            $('#uploadSuccess').css('display','none')
             CKEDITOR.replace( 'text' );
             CKEDITOR.instances['text'].setData('');
             editmodal.style.display = "block";
@@ -196,6 +210,7 @@
 
 
     </script>
+    {% endif %}
 {% endblock %}
 
 {% block js %}

@@ -87,3 +87,8 @@ class UpdateSliderImageForm(ModelForm):
     class Meta:
         model = AboutSlider
         fields = ('id','image',)
+
+class CreateTempImageForm(ModelForm):
+    class Meta:
+        model = TempImages
+        fields = ('image',)

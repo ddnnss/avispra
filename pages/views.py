@@ -479,6 +479,16 @@ def updateSliderImg(request):
     return_dict['result'] = 'success'
     return JsonResponse(return_dict)
 
+def uploadImg(request):
+    return_dict = {}
+
+    img = ''
+    form = CreateTempImageForm(request.POST, request.FILES)
+    if form.is_valid():
+         img = form.save()
+    return_dict['url'] = img.image.url
+    return JsonResponse(return_dict)
+
 def user_login(request):
     if request.GET:
         return render(request, 'login.html', locals())

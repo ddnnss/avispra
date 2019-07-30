@@ -155,6 +155,9 @@ class Item(models.Model):
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
 
+class TempImages(models.Model):
+    image = models.ImageField('Изображение', upload_to='temp_images', blank=False)
+
 
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.CASCADE, verbose_name='Изображение для товара')

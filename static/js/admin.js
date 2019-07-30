@@ -3,6 +3,22 @@ var el_h = ''
 var header_target = ''
 var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].defaultValue
 
+   function uploadImg(el) {
+             let file = el.files[0]
+
+            let fd = new FormData();
+                fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+                fd.append('image',file)
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/uploadImg/', true);
+                xhr.onload = function () {
+                    console.log(JSON.parse(this.response));
+                    $('#imgUrl').html(JSON.parse(this.response).url)
+                    $('#uploadSuccess').css('display','block')
+                };
+                xhr.send(fd);
+        }
+
 function changeImg(el) {
     let target = el.dataset.target
     let id = el.dataset.id

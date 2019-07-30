@@ -34,6 +34,7 @@ urlpatterns = [
     path('addSliderImg/', views.addSliderImg, name='addSliderImg'),
     path('deleteSliderImg/', views.deleteSliderImg, name='deleteSliderImg'),
     path('updateSliderImg/', views.updateSliderImg, name='updateSliderImg'),
+    path('uploadImg/', views.uploadImg, name='uploadImg'),
 
 
 
