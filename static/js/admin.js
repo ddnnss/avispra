@@ -13,8 +13,9 @@ var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].d
                 xhr.open('POST', '/uploadImg/', true);
                 xhr.onload = function () {
                     console.log(JSON.parse(this.response));
-                    $('#imgUrl').html(JSON.parse(this.response).url)
-                    $('#uploadSuccess').css('display','block')
+                    $('.imgUrl').html(JSON.parse(this.response).url)
+                    $('.uploadSuccess').css('display','block')
+
                 };
                 xhr.send(fd);
         }
@@ -101,6 +102,7 @@ function saveHeader(el) {
 function closeEditModal() {
     let editmodal = document.getElementById('editModal');
     editmodal.style.display = "none";
+     $('.uploadSuccess').css('display','none')
 }
 function editInfo(el,target) {
     el_p = el

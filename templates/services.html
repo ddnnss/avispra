@@ -94,7 +94,7 @@
 
 
             </div>
-            <p style="display: none" id="uploadSuccess">Картинка загружена. Используйте этот путь, что вставить картинку в текст: <strong><span id="imgUrl"></span></strong></p>
+            <p style="display: none" class="uploadSuccess">Картинка загружена. Используйте этот путь, что вставить картинку в текст: <strong><span class="imgUrl"></span></strong></p>
         </div>
     </div>
 
@@ -111,7 +111,7 @@
             mode = 'new'
             $('#header').val('')
             $('#sendDataService').attr('onclick','newServiceSave()')
-            $('#uploadSuccess').css('display','none')
+            $('.uploadSuccess').css('display','none')
             CKEDITOR.replace( 'text' );
             CKEDITOR.instances['text'].setData('');
             editmodal.style.display = "block";
@@ -206,6 +206,7 @@
 
         function closeEditModalService() {
             editmodal.style.display = "none";
+            $('.uploadSuccess').css('display','none')
         }
 
 
