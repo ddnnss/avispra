@@ -6,7 +6,7 @@
         <div class="container">
             <div class="breadcrumbs mb30">
                 <ul>
-                    <li><a href="#">Главная</a></li>
+                    <li><a href="{% url 'index' %}">Главная</a></li>
                     <li>Портфолию</li>
 
                 </ul>
@@ -64,7 +64,7 @@
     </section>
 
     {% if user.is_authenticated %}
-        <div style="display: none" id="ModalCategory" class="editModal">{% csrf_token %}
+        <div style="display: none;overflow: scroll; padding-top: 0" id="ModalCategory" class="editModal">{% csrf_token %}
             <div style="padding: 10px; text-align: left" id="modal-content" class="editmodal-content">
                 <label for="cat_name">Название</label>
                 <input style="margin-bottom: 20px"  id="cat_name" >

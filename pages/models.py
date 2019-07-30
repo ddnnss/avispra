@@ -33,7 +33,7 @@ class AboutPageWork(models.Model):
 
 class AboutSlider(models.Model):
     image = models.ImageField('О нас - Изображения для слайдера', upload_to='about_images', blank=False)
-    is_active = models.BooleanField('Показывать на странице?', default=True)
+    is_active = models.BooleanField('Показывать на странице?', default=True,blank=True)
 
     def __str__(self):
         return 'Избражение в слайдере'
@@ -250,11 +250,27 @@ def auto_delete_file_on_change_itemimage(sender, instance, **kwargs):
         if os.path.isfile(old_file.path):
             os.remove(old_file.path)
 
+def auto_delete_file_on_change_slider(sender, instance, **kwargs):
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = AboutSlider.objects.get(pk=instance.pk).image
+    except AboutPageClients.DoesNotExist:
+        return False
+
+    new_file = instance.image
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)
+
 post_delete.connect(auto_delete_file_on_delete, sender=AboutPageClients)
 post_delete.connect(auto_delete_file_on_delete, sender=AboutPageWork)
 post_delete.connect(auto_delete_file_on_delete, sender=ItemImage)
 post_delete.connect(auto_delete_file_on_delete, sender=Category)
+post_delete.connect(auto_delete_file_on_delete, sender=AboutSlider)
 pre_save.connect(auto_delete_file_on_change_category, sender=Category)
 pre_save.connect(auto_delete_file_on_change_clients, sender=AboutPageClients)
 pre_save.connect(auto_delete_file_on_change_work, sender=AboutPageWork)
 pre_save.connect(auto_delete_file_on_change_itemimage, sender=ItemImage)
+pre_save.connect(auto_delete_file_on_change_slider, sender=AboutSlider)

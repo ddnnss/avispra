@@ -3,14 +3,15 @@
 
 {% block content %}
  <section class="map">
- <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Af23411efd9c9fdfaee6c2ebe0679d056053b24e8835ed81426b0f7568d094f40&amp;width=100%25&amp;height=463&amp;lang=ru_RU&amp;scroll=true"></script>
-
+<div class="mapouter">
+    <div class="gmap_canvas">
+        <iframe width="100%" height="463" id="gmap_canvas" src="https://maps.google.com/maps?q=%D0%A0%D0%9E%D0%A1%D0%A1%D0%98%D0%AF%2C%20%D0%A1%D0%90%D0%9D%D0%9A%D0%A2-%D0%9F%D0%95%D0%A2%D0%95%D0%A0%D0%91%D0%A3%D0%A0%D0%93%2C%20%D0%A3%D0%9B%20%D0%9F%D0%98%D0%9D%D0%95%D0%93%D0%98%D0%9D%D0%90%2C%205&t=&z=17&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
 </section>
 <section class="contact-main">
     <div class="container">
         <div class="breadcrumbs mb30">
             <ul>
-                <li><a href="/">Главная</a></li>
+                <li><a href="{% url 'index' %}">Главная</a></li>
                 <li>Контакты</li>
             </ul>
         </div>

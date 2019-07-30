@@ -77,3 +77,13 @@ class CreateItemImageForm(ModelForm):
     class Meta:
         model = ItemImage
         fields = ('image','item')
+
+class CreateSliderImageForm(ModelForm):
+    class Meta:
+        model = AboutSlider
+        fields = ('image',)
+
+class UpdateSliderImageForm(ModelForm):
+    class Meta:
+        model = AboutSlider
+        fields = ('id','image',)

@@ -3,18 +3,58 @@
 
 {% block content %}
     <section class="slider">
+    {% if user.is_authenticated %}
+        <div style="    position: absolute;
+    top: 130px;
+    z-index: 100;">
+         <input id="addsliderImg"  type="file" onchange="addSliderImg(this)"  class="edit-info-file">
+                <label style="background: #f66059;
+                                        padding: 10px;
+                                        display: inline-block;
+                                        margin-bottom: 20px;
+                                        border-radius: 21px;
+                                        color: #fff;" for="addsliderImg"  >
+                    Добавить изображение в слайдер (рекомендуемый размер 1920х495)
+                </label>
+        </div>
+
+            {% endif %}
         <div class="my-slider">
             {% for slide in slider %}
-                <div><img src="{{ slide.image.url }}" alt=""></div>
+                <div><img src="{{ slide.image.url }}" alt="">
+                  {% if user.is_authenticated %}
+                <div>
+                  <label style="background: #33bf11;
+                                        padding: 10px;
+                                        display: inline-block;
+                                        margin-bottom: 20px;
+                                        border-radius: 21px;
+                                        color: #fff;" for="upadetsliderImg{{ slide.id }}"  >
+                    Изменить это изображение (рекомендуемый размер 1920х495)
+                </label>
+                    <a style="background: red;
+                    text-decoration: none;
+                    padding: 10px;
+                    display: inline-block;
+                    margin-bottom: 20px;
+                    border-radius: 21px;
+                    margin-left: 120px;
+                    color: #fff;" href="javascript:void(0)" data-slide_id="{{ slide.id }}" onclick="deleteSliderImg(this)"> удалить</a>
+                      <input id="upadetsliderImg{{ slide.id }}"  type="file" data-slide_id="{{ slide.id }}" onchange="updateSliderImg(this)"  class="edit-info-file">
+
+                </div>
+                {% endif %}
+                </div>
             {% endfor %}
 
         </div>
     </section>
     <section class="about-main">
         <div class="container">
+
             <div class="breadcrumbs mb30">
                 <ul>
-                    <li><a href="/">Главная</a></li>
+                    <li><a href="{% url 'index' %}">Главная</a></li>
                     <li>О нас</li>
                 </ul>
             </div>
@@ -27,7 +67,7 @@
                     <label for="page_keywords">KEYWORDS страницы</label>
                     <input class="seo_input" id="page_keywords" value="{{ keywords }}">
                     <input type="hidden" id="page_target" value="about">
-                     <input type="hidden" id="page_type" value="static">
+                    <input type="hidden" id="page_type" value="static">
                     <a  class="btn seo-btn" data-target="" href="javascript:void(0)" onclick="saveSEO(this)">Сохранить</a>
                 </div>
 
@@ -72,7 +112,7 @@
                     <input id="about_header_section2_input" style=" padding: 10px" value="{{ header_section2 }}">
                     <a class="btn" id="about_header_section2_btn" data-target="" href="javascript:void(0)" onclick="saveHeader(this)">Сохранить</a>
                 </div>
-                 <input  id="new_img_clients" data-target="clients" type="file" onchange="addImg(this)"  class="edit-info-file">
+                <input  id="new_img_clients" data-target="clients" type="file" onchange="addImg(this)"  class="edit-info-file">
                 <label style="background: #f66059;
                                         padding: 10px;
                                         display: inline-block;
@@ -99,7 +139,7 @@
                             <input id="client_{{client.id}}" data-target="client" data-id="{{client.id}}" type="file" onchange="changeImg(this)"  class="edit-info-file">
                             <label for="client_{{client.id}}"  >
                                 <img id="client_img_{{ client.id }}"  src="{{ client.image.url }}" alt=""></label>
-                          <a class="del-img-button" data-target="clients" data-id="{{client.id}}" href="javascript:void(0)" onclick="delImg(this)">удалить</a>
+                            <a class="del-img-button" data-target="clients" data-id="{{client.id}}" href="javascript:void(0)" onclick="delImg(this)">удалить</a>
                         </div>
 
                     {% else %}
@@ -142,7 +182,7 @@
                             <input id="work_{{work.id}}" data-target="work" data-id="{{work.id}}" type="file" onchange="changeImg(this)"  class="edit-info-file">
                             <label for="work_{{work.id}}"  >
                                 <img id="work_img_{{ work.id }}"  src="{{ work.image.url }}" alt=""></label>
-                        <a class="del-img-button" data-target="work" data-id="{{work.id}}" href="javascript:void(0)" onclick="delImg(this)">удалить</a>
+                            <a class="del-img-button" data-target="work" data-id="{{work.id}}" href="javascript:void(0)" onclick="delImg(this)">удалить</a>
                         </div>
 
                     {% else %}
@@ -161,51 +201,103 @@
     {% if user.is_authenticated %}
         {% include 'editmodal.html' %}
     {% endif %}
+    {% if user.is_authenticated %}
+        <script>
 
-<script>
+        function addSliderImg(el) {
+            let file = el.files[0]
 
-function addImg(el) {
-    let file = el.files[0]
-    let target = el.dataset.target
-    let new_img = ''
-    let reader = new FileReader();
-    reader.onload = function(e) {
-        new_img =  e.target.result
-    }
-    reader.readAsDataURL(el.files[0]);
+            let fd = new FormData();
+                fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+                fd.append('image',file)
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/addSliderImg/', true);
+                xhr.onload = function () {
+                    console.log(JSON.parse(this.response));
+                    document.location.reload(true);
+                };
+                xhr.send(fd);
 
-    let fd = new FormData();
-    fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
-    fd.append('image',file)
-    fd.append('target',target)
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/addImg/', true);
-    xhr.onload = function () {
-        console.log(JSON.parse(this.response));
-        document.location.reload(true);
-    };
-    xhr.send(fd);
+        }
 
-}
+        function deleteSliderImg(el) {
+            let slide_id = el.dataset.slide_id
 
-function delImg(el) {
-    let target = el.dataset.target
-    let id = el.dataset.id
-    let fd = new FormData();
-    fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
-    fd.append('id',id)
-    fd.append('target',target)
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/delImg/', true);
-    xhr.onload = function () {
-        console.log(JSON.parse(this.response));
-        document.location.reload(true);
-    };
-    xhr.send(fd);
+            let fd = new FormData();
+                fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+                fd.append('id',slide_id)
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/deleteSliderImg/', true);
+                xhr.onload = function () {
+                    console.log(JSON.parse(this.response));
+                    document.location.reload(true);
+                };
+                xhr.send(fd);
 
-}
-</script>
+        }
 
+        function updateSliderImg(el) {
+            let slide_id = el.dataset.slide_id
+            let file = el.files[0]
+
+            let fd = new FormData();
+                fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+                fd.append('id',slide_id)
+                fd.append('image',file)
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/updateSliderImg/', true);
+                xhr.onload = function () {
+                    console.log(JSON.parse(this.response));
+                    document.location.reload(true);
+                };
+                xhr.send(fd);
+
+        }
+
+
+
+            function addImg(el) {
+                let file = el.files[0]
+                let target = el.dataset.target
+                let new_img = ''
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    new_img =  e.target.result
+                }
+                reader.readAsDataURL(el.files[0]);
+
+                let fd = new FormData();
+                fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+                fd.append('image',file)
+                fd.append('target',target)
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/addImg/', true);
+                xhr.onload = function () {
+                    console.log(JSON.parse(this.response));
+                    document.location.reload(true);
+                };
+                xhr.send(fd);
+
+            }
+
+            function delImg(el) {
+                let target = el.dataset.target
+                let id = el.dataset.id
+                let fd = new FormData();
+                fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
+                fd.append('id',id)
+                fd.append('target',target)
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/delImg/', true);
+                xhr.onload = function () {
+                    console.log(JSON.parse(this.response));
+                    document.location.reload(true);
+                };
+                xhr.send(fd);
+
+            }
+        </script>
+    {% endif %}
 
 {% endblock %}
 

@@ -6,7 +6,7 @@
         <div class="container">
             <div class="breadcrumbs mb30">
                 <ul>
-                    <li><a href="/">Главная</a></li>
+                    <li><a href="{% url 'index' %}">Главная</a></li>
                     <li><a href="{% url 'portfolio' %}">Портфолию</a></li>
                     <li>{{ category.name }}</li>
                 </ul>
@@ -201,7 +201,7 @@
 
                 $('span','#img'+ item_id ).each(function() {
                     console.log ('ff');
-                    $('#item_images').append("<div id='previewImgDiv" + $( this ).attr("data-img_id") + "'>" +
+                    $('#item_images').append("<div class='previewImgDiv' id='previewImgDiv" + $( this ).attr("data-img_id") + "'>" +
                         "<input id='itemimage_" + $( this ).attr("data-img_id") + "'  data-id=" + $( this ).attr("data-img_id") + " type='file' onchange='editItemImage(this)'  class='edit-info-file'>\n" +
                         "                    <label for='itemimage_" + $( this ).attr("data-img_id") + "'  >\n" +
                         "                        <img class='previewImg' id='previewImg" + $( this ).attr("data-img_id") + "'  src="+ $( this ).html() +">\n" +

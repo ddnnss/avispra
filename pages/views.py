@@ -434,21 +434,50 @@ def deleteItemImg(request):
     return JsonResponse(return_dict)
 
 def addNewItemImg(request):
-
     return_dict = {}
     print(request.POST)
-
-
-
     form = CreateItemImageForm(request.POST, request.FILES)
     if form.is_valid():
         form.save()
-
     return_dict['result'] = 'success'
-
-
     return JsonResponse(return_dict)
 
+def addSliderImg(request):
+    return_dict = {}
+    print('start')
+    print(AboutSlider.objects.all())
+    AboutSlider.objects.create(image=request.FILES.get('image')).save()
+    print(AboutSlider.objects.all())
+    print('end')
+    # form = CreateSliderImageForm(request.POST, request.FILES)
+    # if form.is_valid():
+    #     form.save()
+    return_dict['result'] = 'success'
+    return JsonResponse(return_dict)
+
+def deleteSliderImg(request):
+    return_dict = {}
+    print(request.POST)
+    id = int(request.POST.get('id'))
+    slide = AboutSlider.objects.get(id=id)
+    slide.delete()
+
+    return_dict['result'] = 'success'
+    return JsonResponse(return_dict)
+
+def updateSliderImg(request):
+    return_dict = {}
+    print(request.POST)
+    id = int(request.POST.get('id'))
+    slide = AboutSlider.objects.get(id=id)
+    form = UpdateItemImageForm(request.POST, request.FILES, instance=slide)
+    if form.is_valid():
+        form.save()
+
+
+
+    return_dict['result'] = 'success'
+    return JsonResponse(return_dict)
 
 def user_login(request):
     if request.GET:
