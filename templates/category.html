@@ -16,6 +16,7 @@
             {% if user.is_authenticated %}
                 <a style="display: inline-block; margin-bottom: 20px" class="btn" id=""   data-type="new" href="javascript:void(0)" onclick="newItem(this)">Добавить новый товар в эту категорию</a>
             {% endif %}
+         {% if user.is_authenticated %}
             <div class="portfolio-items">
                 {% for item in items %}
                     <div class="portfolio-item">
@@ -27,10 +28,11 @@
                         {% else %}
                             <p>Цена пошива: {{ item.max_price }} руб</p>
                         {% endif %}
-                        {% for img in item.itemimage_set.all %}
-                            <span style="display: none" id="iimg{{ img.id }}" data-img_id="{{ img.id }}">{{ img.image.url }}</span>
-
-                        {% endfor %}
+                        <div id="img{{ item.id }}">
+                            {% for img in item.itemimage_set.all %}
+                                <span style="display: none"  data-img_id="{{ img.id }}">{{ img.image.url }}</span>
+                            {% endfor %}
+                        </div>
                         <a style="display: inline-block; margin-top: 20px" class="btn" data-item_id="{{ item.id }}"
                            data-title="{{ item.title }}"
                            data-description="{{ item.description }}"
@@ -44,6 +46,24 @@
                            href="javascript:void(0)" onclick="editItem(this)">Редактировать</a>
                     </div>
                 {% endfor %}
+            {% else %}
+             <div class="portfolio-items">
+                 {% for item in items %}
+                    <div class="portfolio-item">
+                        <a href="{% url 'portfolio_item' category.name_slug item.name_slug %}"><img src="{{ item.itemimage_set.first.image.url }}" alt=""></a>
+
+                        <h5><a href="{% url 'portfolio_item' category.name_slug item.name_slug %}">{{ item.name }}</a></h5>
+                        {% if item.min_price > 0 %}
+                            <p>Цена пошива: от {{ item.min_price }} до {{ item.max_price }} руб</p>
+                        {% else %}
+                            <p>Цена пошива: {{ item.max_price }} руб</p>
+                        {% endif %}
+
+
+                    </div>
+                {% endfor %}
+             </div>
+            {% endif %}
 
 
             </div>
@@ -56,22 +76,22 @@
     {% if user.is_authenticated %}
         <div style="display: none; overflow: scroll; padding-top: 0" id="ModalItem" class="editModal">{% csrf_token %}
             <div style="padding: 10px; text-align: left" id="modal-content" class="editmodal-content">
-                <label for="item_name">Название <sup>*</sup></label>
+                <label for="item_name">Название товара <sup>*</sup></label>
                 <input style="margin-bottom: 20px"  id="item_name" required>
-                <label for="editor">Описание товара</label>
+                <label for="editor">Описание товара (отображается на странице товара)</label>
                 <textarea style="margin-bottom: 20px"  id="editor" ></textarea>
-                <label for="item_min_order">Минимальный заказ</label>
-                <input style="margin-bottom: 20px"  id="item_min_order" type="number" >
-                <label for="item_min_price">Минимальная цена (если не указано, то не отображается)</label>
-                <input style="margin-bottom: 20px"  id="item_min_price" type="number" >
+                <label for="item_min_order">Минимальный заказ (0 - не показывать на странице)</label>
+                <input style="margin-bottom: 20px"  id="item_min_order" type="number" value="0" >
+                <label for="item_min_price">Минимальная цена (0 - не показывать на странице)</label>
+                <input style="margin-bottom: 20px"  id="item_min_price" type="number" value="0" >
                 <label for="item_max_price">Максимальная цена <sup>*</sup></label>
                 <input style="margin-bottom: 20px"  id="item_max_price" required type="number" >
 
-                <label for="item_page_title">Title станицы</label>
+                <label for="item_page_title">Тег 'TITLE' страницы товара </label>
                 <input  style="margin-bottom: 20px"  id="item_page_title" >
-                <label for="item_page_description">Description станицы</label>
+                <label for="item_page_description">Тег 'DESCRIPTION' страницы товара</label>
                 <input  style="margin-bottom: 20px"   id="item_page_description" >
-                <label for="item_page_keywords">Keywords станицы</label>
+                <label for="item_page_keywords">Тег 'KEYWORDS' страницы товара</label>
                 <input style="margin-bottom: 20px"   id="item_page_keywords" >
                 <input  id="new_img" data-target="work" type="file" onchange="addItemImg(this)"  class="edit-info-file" multiple>
                 <label id="label_img" style="background: #f66059;
@@ -85,7 +105,7 @@
                     Добавить изображения для товара (необходимо выбрать сразу все нужные изображения)
                 </label>
 
-                 <input  id="new_item_img"  type="file" data-id="" onchange="addNewItemImg(this)"  class="edit-info-file" >
+                <input  id="new_item_img"  type="file" data-id="" onchange="addNewItemImg(this)"  class="edit-info-file" >
                 <label id="label_new_img" style="background: #f66059;
                                             padding: 10px;
                                                 display: block;
@@ -96,8 +116,11 @@
                                             color: #fff;" for="new_item_img"  >
                     Добавить изображениe для товара
                 </label>
+                <span>Для редактирования - кликните на изображение</span>
 
-                <div  style="display: flex; justify-content: space-between;" id="item_images">
+                <div  style=" display: grid;
+                            grid-template-columns: 1fr 1fr 1fr;
+                            grid-gap: 10px;" id="item_images">
 
 
 
@@ -131,11 +154,11 @@
                 $('#del_info').css('display','none')
                 $('#label_img').css('display','block')
                 $('#label_new_img').css('display','none')
-               // $('#item_images').html('')
+                $('#item_images').html('')
                 $('#item_name').val('')
                 $('#editor').html('')
-                $('#item_min_order').val('')
-                $('#item_min_price').val('')
+                $('#item_min_order').val('0')
+                $('#item_min_price').val('0')
                 $('#item_max_price').val('')
 
 
@@ -151,7 +174,10 @@
 
             function editItem(el) {
                 let item_id = el.dataset.item_id
-               // $('#item_images').html('')
+
+
+
+                $('#item_images').html('')
                 $('#deleteItem').attr('data-id',item_id)
                 $('#new_item_img').attr('data-id',item_id)
                 $('#item_name').val(el.dataset.name)
@@ -173,14 +199,14 @@
                 $('#saveItem').attr('data-item_id',item_id)
                 CKEDITOR.replace( 'editor' );
 
-                $( "span[id^='iimg']" ).each(function() {
+                $('span','#img'+ item_id ).each(function() {
                     console.log ('ff');
                     $('#item_images').append("<div id='previewImgDiv" + $( this ).attr("data-img_id") + "'>" +
                         "<input id='itemimage_" + $( this ).attr("data-img_id") + "'  data-id=" + $( this ).attr("data-img_id") + " type='file' onchange='editItemImage(this)'  class='edit-info-file'>\n" +
                         "                    <label for='itemimage_" + $( this ).attr("data-img_id") + "'  >\n" +
                         "                        <img class='previewImg' id='previewImg" + $( this ).attr("data-img_id") + "'  src="+ $( this ).html() +">\n" +
                         "                    </label>" +
-                        "<a href='javascript:void(0)' class='small-delete' data-id="+ $( this ).attr("data-img_id") +" onclick='deleteItemImage(this)'>удалить</a>" +
+                        "<a href='javascript:void(0)' class='small-delete' data-item_id="+ item_id+" data-id="+ $( this ).attr("data-img_id") +" onclick='deleteItemImage(this)'>удалить</a>" +
                         "</div>"
                     )
                 });
@@ -222,21 +248,20 @@
                 let file = el.files[0]
                 let reader = new FileReader();
                 reader.onload = function(e) {
-                     $('#item_images').append("<div >\n" +
-                         "                   <img class='previewImg'  src=" + e.target.result + ">\n" +
-                         "</div>"
+                    $('#item_images').append("<div >\n" +
+                        "                   <img class='previewImg'  src=" + e.target.result + ">\n" +
+                        "</div>"
                     )
 
                 }
                 reader.readAsDataURL(el.files[0]);
 
-                return
                 let fd = new FormData();
                 fd.append('csrfmiddlewaretoken',csrfmiddlewaretoken)
-                fd.append('id',img_id)
+                fd.append('item',item_id)
                 fd.append('image',file)
                 let xhr = new XMLHttpRequest();
-                xhr.open('POST', '/changeItemImg/', true);
+                xhr.open('POST', '/addNewItemImg/', true);
                 xhr.onload = function () {
                     console.log(JSON.parse(this.response));
 
@@ -322,11 +347,11 @@
             }
 
             function deleteItem(el) {
-                 let id = el.dataset.id
-                 var data = new FormData();
-                 data.append('csrfmiddlewaretoken', csrfmiddlewaretoken)
-                  data.append('id', id)
-                  $.ajax({
+                let id = el.dataset.id
+                var data = new FormData();
+                data.append('csrfmiddlewaretoken', csrfmiddlewaretoken)
+                data.append('id', id)
+                $.ajax({
                     url: "/deleteItem/",
                     type: "POST",
                     method: 'POST',
@@ -347,10 +372,12 @@
 
             function deleteItemImage(el) {
                 let id = el.dataset.id
-                 var data = new FormData();
-                 data.append('csrfmiddlewaretoken', csrfmiddlewaretoken)
-                  data.append('id', id)
-                  $.ajax({
+                let item_id = el.dataset.item_id
+                $(this).closest('#previewImgDiv'+id).remove()
+                var data = new FormData();
+                data.append('csrfmiddlewaretoken', csrfmiddlewaretoken)
+                data.append('id', id)
+                $.ajax({
                     url: "/deleteItemImg/",
                     type: "POST",
                     method: 'POST',
@@ -360,7 +387,7 @@
                     processData: false,
                     success: function(msg) {
 
-                       $('#previewImgDiv'+id).remove();
+                        $('#previewImgDiv'+id).remove();
                     },
                     error: function(msg) {
 

@@ -7,6 +7,8 @@ from django.http import JsonResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from .forms import CreateForm
 from .forms import *
+from django.contrib.auth import authenticate, login, logout
+
 import json
 
 def index(request):
@@ -430,3 +432,42 @@ def deleteItemImg(request):
 
     return_dict['result'] = 'success'
     return JsonResponse(return_dict)
+
+def addNewItemImg(request):
+
+    return_dict = {}
+    print(request.POST)
+
+
+
+    form = CreateItemImageForm(request.POST, request.FILES)
+    if form.is_valid():
+        form.save()
+
+    return_dict['result'] = 'success'
+
+
+    return JsonResponse(return_dict)
+
+
+def user_login(request):
+    if request.GET:
+        return render(request, 'login.html', locals())
+
+    elif request.POST:
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect('/')
+            ...
+        else:
+            return HttpResponseRedirect('/')
+    else:
+        return render(request, 'login.html', locals())
+
+
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect('/')

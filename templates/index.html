@@ -9,6 +9,9 @@
     <meta name="keywords" content="{{ keywords }}"/>
     <link href="https://fonts.googleapis.com/css?family=Arimo:400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% if user.is_authenticated %}
+     <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    {% endif %}
 </head>
 <body>
 
@@ -31,6 +34,9 @@
                 <li><a href="{% url 'services' %}">услуги</a></li>
                 <li><a href="{% url 'portfolio' %}">портфолио</a></li>
                 <li><a href="{% url 'contacts' %}">контакты</a></li>
+              {% if user.is_authenticated %}
+                  <li><a href="{% url 'user_logout' %}">Выйти</a></li>
+             {% endif %}
             </ul>
     </nav>
     </div>

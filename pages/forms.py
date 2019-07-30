@@ -4,6 +4,7 @@ from .models import *
 
 
 
+
 class CreateForm(ModelForm):
      class Meta:
         model = Forms
@@ -71,3 +72,8 @@ class UpdateItemImageForm(ModelForm):
         model = ItemImage
         fields = ('image',)
 
+
+class CreateItemImageForm(ModelForm):
+    class Meta:
+        model = ItemImage
+        fields = ('image','item')

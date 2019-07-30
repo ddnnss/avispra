@@ -1,0 +1,25 @@
+{% extends 'basic.html' %}
+{% load static %}
+
+{% block content %}
+      <div class="container">
+      <div style="text-align: center;
+    padding: 40px;
+" class="login-page">
+        <form style="display: inline-flex;
+                    flex-direction: column;
+                    align-items: center;
+                    border: 1px dashed #f66059;
+                    padding: 30px;" action="{% url 'user_login' %}" method="post">{% csrf_token %}
+            <label for="username">Логин</label>
+            <input id="username" required name="username">
+            <label for="password">Пароль</label>
+            <input id="password" type="password" required name="password">
+            <button type="submit">Войти</button>
+
+        </form>
+      </div>
+
+
+    </div>
+{% endblock %}

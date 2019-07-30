@@ -28,6 +28,10 @@ urlpatterns = [
     path('updateItem/', views.updateItem, name='updateItem'),
     path('deleteItem/', views.deleteItem, name='deleteItem'),
     path('deleteItemImg/', views.deleteItemImg, name='deleteItemImg'),
+    path('addNewItemImg/', views.addNewItemImg, name='addNewItemImg'),
+    path('login/', views.user_login, name='user_login'),
+    path('logout/', views.user_logout, name='user_logout'),
+
 
 
 
